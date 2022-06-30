@@ -2,5 +2,7 @@
 
 # JDBC mock driver
 
+[Примеры работы с драйвером](https://github.com/V31R/jdbc-mock-example)
+
 ## TODO: сделать driver и readme
 
