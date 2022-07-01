@@ -12,7 +12,7 @@ public class HttpConnection implements Connection {
 
     String url;
 
-    public HttpConnection(String url) throws IOException {
+    public HttpConnection(String url){
 
         this.url = "http:" + url;
 

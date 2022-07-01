@@ -7,6 +7,7 @@ import org.junit.platform.suite.api.Suite;
 
 import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,6 +52,14 @@ public class HttpDriverTest {
        httpDriver = HttpDriver.load();
 
     }
+
+    @Test
+    public void driverLoadedSuccessfully() throws SQLException {
+
+        assertNotNull(DriverManager.getDriver(driverUri_Correct));
+
+    }
+
 
     @Test
     public void driverLoadConnection_IfTrue() throws SQLException {

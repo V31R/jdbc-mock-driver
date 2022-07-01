@@ -19,15 +19,8 @@ public class HttpDriver implements Driver {
         var connectionUrlMatcher = Pattern.compile("//.+").matcher(url);
 
         if(driverUrlPattern.asPredicate().test(url) && connectionUrlMatcher.find()){
-            try {
 
-                return new HttpConnection(url.substring(connectionUrlMatcher.start(), connectionUrlMatcher.end()));
-
-            }catch (IOException  exception){//MalformedURLException too
-
-                throw  new SQLException(exception.getMessage());
-
-            }
+            return new HttpConnection(url.substring(connectionUrlMatcher.start(), connectionUrlMatcher.end()));
 
         }
 
