@@ -20,6 +20,7 @@ public class HttpDriver implements Driver {
 
         if(driverUrlPattern.asPredicate().test(url) && connectionUrlMatcher.find()){
             try {
+
                 return new HttpConnection(url.substring(connectionUrlMatcher.start(), connectionUrlMatcher.end()));
 
             }catch (IOException  exception){//MalformedURLException too
@@ -68,11 +69,12 @@ public class HttpDriver implements Driver {
 
         if (!isRegistered) {
 
-            isRegistered = true;
-
             try {
 
                 DriverManager.registerDriver(INSTANCE);
+
+                isRegistered = true;
+
 
             } catch (SQLException sqlException) {
 
