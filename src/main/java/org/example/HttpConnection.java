@@ -93,7 +93,7 @@ public class HttpConnection implements Connection {
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        return null;
+        return new HttpMetaData();
     }
 
     @Override

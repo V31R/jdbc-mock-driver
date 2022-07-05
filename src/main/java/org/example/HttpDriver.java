@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
@@ -40,12 +41,12 @@ public class HttpDriver implements Driver {
 
     @Override
     public int getMajorVersion() {
-        return 0;
+        return Integer.getInteger(System.getProperty("jdbc.wm.driver_major_version"));
     }
 
     @Override
     public int getMinorVersion() {
-        return 1;
+        return Integer.getInteger(System.getProperty("jdbc.wm.driver_minor_version"));
     }
 
     @Override
@@ -81,9 +82,29 @@ public class HttpDriver implements Driver {
 
     }
 
+    public static synchronized void driverPropertiesLoad(){
+
+        try {
+
+            FileInputStream propertiesFile = new FileInputStream("src/main/resources/driver-mock.properties");
+
+            Properties newProperties = System.getProperties();
+            newProperties.load(propertiesFile);
+
+            System.setProperties(newProperties);
+
+        }catch (Exception exception){
+
+            System.exit(1);
+
+        }
+
+    }
+
     static {
 
         load();
+        driverPropertiesLoad();
 
     }
 
