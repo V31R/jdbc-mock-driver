@@ -56,7 +56,8 @@ public class HttpMetaData implements DatabaseMetaData {
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        return System.getProperty("jdbc.wm.database_version");
+        return System.getProperty("jdbc.wm.database_major_version") + "."
+                + System.getProperty("jdbc.wm.database_minor_version");
     }
 
     @Override
@@ -801,22 +802,22 @@ public class HttpMetaData implements DatabaseMetaData {
 
     @Override
     public int getDatabaseMajorVersion() throws SQLException {
-        return 0;
+        return Integer.parseInt(System.getProperty("jdbc.wm.database_major_version"));
     }
 
     @Override
     public int getDatabaseMinorVersion() throws SQLException {
-        return 0;
+        return Integer.parseInt(System.getProperty("jdbc.wm.database_minor_version"));
     }
 
     @Override
     public int getJDBCMajorVersion() throws SQLException {
-        return 0;
+        return Integer.parseInt(System.getProperty("jdbc.wm.jdbc_major_version"));
     }
 
     @Override
     public int getJDBCMinorVersion() throws SQLException {
-        return 0;
+        return Integer.parseInt(System.getProperty("jdbc.wm.jdbc_minor_version"));
     }
 
     @Override

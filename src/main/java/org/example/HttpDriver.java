@@ -85,6 +85,7 @@ public class HttpDriver implements Driver {
     public static synchronized void driverPropertiesLoad(){
 
         try {
+
             var propertiesFile = HttpDriver.class.getClassLoader().getResourceAsStream("driver-mock.properties");
 
             Properties newProperties = System.getProperties();

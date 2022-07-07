@@ -80,4 +80,45 @@ public class HttpMetaDataTest {
 
     }
 
+    @Test
+    public void getDatabaseMajorVersion() throws SQLException{
+
+        DatabaseMetaData metaData = connection.getMetaData();
+        var r = metaData.getDatabaseMajorVersion();
+
+        assertTrue(true);
+
+    }
+
+    @Test
+    public void getDatabaseMinorVersion() throws SQLException{
+
+        DatabaseMetaData metaData = connection.getMetaData();
+        var r = metaData.getDatabaseMinorVersion();
+
+        assertTrue(true);
+
+    }
+
+    @Test
+    public void getJDBCMajorVersion() throws SQLException{
+
+        DatabaseMetaData metaData = connection.getMetaData();
+        var r = metaData.getJDBCMajorVersion();
+
+        assertTrue(true);
+
+    }
+
+    @Test
+    public void getJDBCMinorVersion() throws SQLException{
+
+        DatabaseMetaData metaData = connection.getMetaData();
+        var r = metaData.getJDBCMinorVersion();
+
+        assertTrue(true);
+
+    }
+
+
 }
