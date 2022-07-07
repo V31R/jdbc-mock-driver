@@ -64,8 +64,9 @@ public class HttpMetaDataTest {
     public void getDriverMajorVersion() throws SQLException{
 
         DatabaseMetaData metaData = connection.getMetaData();
+        var r = metaData.getDriverMajorVersion();
 
-        assertNotNull(metaData.getDriverMajorVersion());
+        assertTrue(true);
 
     }
 
@@ -73,8 +74,9 @@ public class HttpMetaDataTest {
     public void getDriverMinorVersion() throws SQLException{
 
         DatabaseMetaData metaData = connection.getMetaData();
+        var r = metaData.getDriverMinorVersion();
 
-        assertNotNull(metaData.getDriverMinorVersion());
+        assertTrue(true);
 
     }
 
