@@ -6,7 +6,23 @@
 
 ## TODO: сделать driver и readme
 
+## Использование драйвера
 
+### Использование вместе с Spring Boot
+
+Для правильной работы `Hibernate` с драйвером нобоходимо указать `hibernate.dialect` в `application-XXX.properties` файле следующим образом:
+```
+spring.jpa.database-platform = org.hibernate.dialect.<Диалект для СУБД, под которую нужно мимикрировать>
+```
+Примеры:
+1.  Для MySQL 8 версии:
+```
+spring.jpa.database-platform = org.hibernate.dialect.MySQL8Dialect
+```
+2. Для PostgreSQL:
+```
+spring.jpa.database-platform = org.hibernate.dialect.PostgreSQLDialect
+```
 
 ## Диаграмма покрытрия кода:
 
