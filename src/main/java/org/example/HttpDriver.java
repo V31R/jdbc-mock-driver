@@ -41,12 +41,12 @@ public class HttpDriver implements Driver {
 
     @Override
     public int getMajorVersion() {
-        return Integer.getInteger(System.getProperty("jdbc.wm.driver_major_version"));
+        return Integer.parseInt(System.getProperty("jdbc.wm.driver_major_version"));
     }
 
     @Override
     public int getMinorVersion() {
-        return Integer.getInteger(System.getProperty("jdbc.wm.driver_minor_version"));
+        return Integer.parseInt(System.getProperty("jdbc.wm.driver_minor_version"));
     }
 
     @Override

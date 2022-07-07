@@ -5,10 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.Suite;
 
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -172,6 +169,25 @@ public class HttpDriverTest {
     public void driverAcceptsUrl_IfFalse_Missing_Url() throws SQLException {
 
         assertFalse(httpDriver.acceptsURL(driverUri_Missing_Url));
+
+    }
+
+
+    @Test
+    public void getMajorVersion() throws SQLException{
+
+        var r = httpDriver.getMajorVersion();
+
+        assertTrue(true);
+
+    }
+
+    @Test
+    public void getMinorVersion() throws SQLException{
+
+        var r = httpDriver.getMinorVersion();
+
+        assertTrue(true);
 
     }
 
