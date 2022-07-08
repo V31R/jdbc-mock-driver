@@ -1,5 +1,7 @@
 package org.example;
 
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 
 import java.sql.*;
@@ -9,6 +11,9 @@ import java.util.concurrent.Executor;
 
 
 public class HttpConnection implements Connection {
+
+    private static final  org.slf4j.Logger logger = LoggerFactory.getLogger(HttpConnection.class);
+
 
     String url;
 
@@ -35,10 +40,13 @@ public class HttpConnection implements Connection {
 
         try {
 
-            return new HttpStatement(url);
+            var result = new HttpStatement(url);
+            logger.debug("Created new statement");
+            return result;
 
         }catch (IOException ioException){
-
+            logger.error("Can't create new statement due to" +
+                    ioException.getMessage());
             throw  new SQLException(ioException.getMessage());
 
         }
@@ -93,6 +101,7 @@ public class HttpConnection implements Connection {
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
+        logger.debug("Create new "+HttpMetaData.class);
         return new HttpMetaData(this);
     }
 

@@ -1,7 +1,7 @@
 package org.example;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import org.slf4j.LoggerFactory;
+
 import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -11,6 +11,7 @@ public class HttpDriver implements Driver {
 
     private static final Driver INSTANCE = new HttpDriver();
     private static boolean isRegistered = false;
+    private static final  org.slf4j.Logger logger = LoggerFactory.getLogger(HttpDriver.class);
 
     Pattern driverUrlPattern = Pattern.compile("^jdbc:wm://.+:.+/.*",Pattern.CASE_INSENSITIVE);
 
@@ -21,9 +22,15 @@ public class HttpDriver implements Driver {
 
         if(driverUrlPattern.asPredicate().test(url) && connectionUrlMatcher.find()){
 
-            return new HttpConnection(url.substring(connectionUrlMatcher.start(), connectionUrlMatcher.end()));
+            var urlToConnection = url.substring(connectionUrlMatcher.start(), connectionUrlMatcher.end());
+
+            logger.debug("Driver create new connection to '" + urlToConnection+"'");
+
+            return new HttpConnection(urlToConnection);
 
         }
+
+        logger.debug("Driver don't fit to '" + url +"'");
 
         return null;
 
@@ -56,7 +63,7 @@ public class HttpDriver implements Driver {
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        return null;
+        return Logger.getLogger(logger.getName());
     }
 
     public static synchronized Driver load() {
@@ -69,9 +76,12 @@ public class HttpDriver implements Driver {
 
                 isRegistered = true;
 
+                logger.info("Driver registered in DriverManager");
 
             } catch (SQLException sqlException) {
 
+                logger.error("Driver not registered in DriverManager due to"
+                        + sqlException.getMessage());
                 sqlException.printStackTrace();
 
             }
@@ -95,9 +105,13 @@ public class HttpDriver implements Driver {
 
         }catch (Exception exception){
 
+            logger.error("Driver properties don't load due to "
+                    + exception.getMessage());
             System.exit(1);
 
         }
+
+        logger.info("Driver properties was loaded");
 
     }
 

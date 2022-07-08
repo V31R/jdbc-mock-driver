@@ -98,7 +98,7 @@ public class HttpDriverTest {
     @Test
     public void driverLoadConnection_IfFalse_Missing_Host() throws SQLException {
 
-        Connection con = httpDriver.connect(driverUri_Missing_DriverName, null);
+        Connection con = httpDriver.connect(driverUri_Missing_Host, null);
 
         assertNull(con);
 
@@ -107,7 +107,7 @@ public class HttpDriverTest {
     @Test
     public void driverLoadConnection_IfFalse_Missing_Port() throws SQLException {
 
-        Connection con = httpDriver.connect(driverUri_Missing_DriverName, null);
+        Connection con = httpDriver.connect(driverUri_Missing_Port, null);
 
         assertNull(con);
 
