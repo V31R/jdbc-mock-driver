@@ -25,6 +25,15 @@ public class HttpMetaDataTest {
     }
 
     @Test
+    public void getConnection() throws SQLException{
+
+        DatabaseMetaData metaData = connection.getMetaData();
+
+        assertNotNull(metaData.getConnection());
+
+    }
+
+    @Test
     public void getDatabaseProductName() throws SQLException{
 
         DatabaseMetaData metaData = connection.getMetaData();

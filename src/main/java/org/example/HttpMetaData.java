@@ -4,6 +4,12 @@ import java.sql.*;
 
 public class HttpMetaData implements DatabaseMetaData {
 
+    Connection connection;
+
+    public HttpMetaData(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public boolean allProceduresAreCallable() throws SQLException {
         return false;
@@ -752,7 +758,7 @@ public class HttpMetaData implements DatabaseMetaData {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return null;
+        return connection;
     }
 
     @Override
