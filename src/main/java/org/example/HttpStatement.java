@@ -1,6 +1,7 @@
 package org.example;
 
 import com.opencsv.exceptions.CsvException;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -9,6 +10,9 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class HttpStatement implements Statement {
+
+    private static final  org.slf4j.Logger logger = LoggerFactory.getLogger(HttpStatement.class);
+
 
     private HttpURLConnection urlConnection;
 
@@ -35,6 +39,8 @@ public class HttpStatement implements Statement {
 
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
+
+        logger.info(this + " Execute query `" + sql +"'");
 
         try {
 

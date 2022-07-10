@@ -14,7 +14,6 @@ public class HttpConnection implements Connection {
 
     private static final  org.slf4j.Logger logger = LoggerFactory.getLogger(HttpConnection.class);
 
-
     String url;
 
     public HttpConnection(String url){
@@ -56,7 +55,7 @@ public class HttpConnection implements Connection {
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return null;
+        return new HttpPreparedStatement();
     }
 
     @Override

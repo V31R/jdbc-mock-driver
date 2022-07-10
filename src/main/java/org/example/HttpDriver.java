@@ -24,9 +24,11 @@ public class HttpDriver implements Driver {
 
             var urlToConnection = url.substring(connectionUrlMatcher.start(), connectionUrlMatcher.end());
 
-            logger.debug("Driver create new connection to '" + urlToConnection+"'");
+            var connection = new HttpConnection(urlToConnection);
+            logger.debug("Driver create new connection(" + connection +
+                    ") to '" + urlToConnection+"'");
 
-            return new HttpConnection(urlToConnection);
+            return connection;
 
         }
 
