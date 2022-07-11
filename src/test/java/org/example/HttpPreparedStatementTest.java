@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
 import java.sql.*;
 
 @WireMockTest
@@ -269,6 +270,112 @@ public class HttpPreparedStatementTest {
     }
 
     @Test
+    public void setFloat_IfTrue() throws SQLException, IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        float value = getRealParameterValue();
+
+        preparedStatement.setFloat(1, value);
+
+        assertEquals(getSqlWithRealParameter(), preparedStatement.getQuery());
+
+    }
+
+    @Test
+    public void setFloat_IfFalse() throws IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        float value = getRealParameterValue();
+        try {
+
+            preparedStatement.setFloat(0, value);
+
+        }catch (SQLException exception){
+
+            assertNotNull(exception);
+
+        }
+
+    }
+
+    @Test
+    public void setDouble_IfTrue() throws SQLException, IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        Double value = Double.valueOf(getRealParameterValue());
+
+        preparedStatement.setDouble(1, value);
+
+        assertEquals(getSqlWithRealParameter(), preparedStatement.getQuery());
+
+    }
+
+    @Test
+    public void setDouble_IfFalse() throws IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        Double value = Double.valueOf(getRealParameterValue());
+        try {
+
+            preparedStatement.setDouble(0, value);
+
+        }catch (SQLException exception){
+
+            assertNotNull(exception);
+
+        }
+
+    }
+
+    @Test
+    public void setBigDecimal_IfTrue() throws SQLException, IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        BigDecimal value = BigDecimal.valueOf(getRealParameterValue());
+
+        preparedStatement.setBigDecimal(1, value);
+
+        assertEquals(getSqlWithRealParameter(), preparedStatement.getQuery());
+
+    }
+
+    @Test
+    public void setBigDecimal_IfFalse() throws IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        BigDecimal value = BigDecimal.valueOf(getRealParameterValue());
+        try {
+
+            preparedStatement.setBigDecimal(0, value);
+
+        }catch (SQLException exception){
+
+            assertNotNull(exception);
+
+        }
+
+    }
+
+
+    @Test
     public void setString_IfTrue() throws SQLException, IOException{
 
         String sql = getSqlWithParameter();
@@ -313,9 +420,21 @@ public class HttpPreparedStatementTest {
 
     }
 
+    private static float getRealParameterValue(){
+
+        return 45.5f;
+
+    }
+
     private static String getSqlWithIntegerParameter(){
 
         return "select * from table where field = 101";
+
+    }
+
+    private static String getSqlWithRealParameter(){
+
+        return "select * from table where field = 45.5";
 
     }
 
