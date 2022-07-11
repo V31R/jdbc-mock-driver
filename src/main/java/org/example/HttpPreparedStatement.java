@@ -18,8 +18,9 @@ public class HttpPreparedStatement implements PreparedStatement {
     private HttpURLConnection urlConnection;
 
     private StringBuilder query;
+    private String[] parts;
     private Object[] parameters;
-
+    private boolean queryIsReady = false;
     public HttpPreparedStatement(String uri, String sql) throws IOException {
 
         urlConnection = (HttpURLConnection) new URL(uri).openConnection();
@@ -29,19 +30,44 @@ public class HttpPreparedStatement implements PreparedStatement {
         urlConnection.setConnectTimeout(HttpConnectionData.timeout);
         urlConnection.setRequestMethod(HttpConnectionData.requestMethod);
 
-        var parts = sql.split("[?]{1}\\d+");
+        parts = sql.split("[?]{1}\\d+");
+        parameters = new Object[parts.length-1];
+
+    }
+
+    private String createQuery(){
+
+        int parametersNumber = 0;
 
         query = new StringBuilder();
-        for (var part : parts){
+        for(int i =0; i < parameters.length;i++){
 
-            query.append(part);
+            query.append(parts[i]);
+            if(parameters[i] != null){
+
+                query.append(parameters[i]);
+                parametersNumber++;
+
+            }
 
         }
+
+        query.append(parts[parameters.length]);
+
+        queryIsReady = (parametersNumber == parameters.length);
+
+        return query.toString();
 
     }
 
     public String getQuery() {
-        return query.toString();
+
+        if(parts.length == 1){
+            return parts[0];
+        }
+
+        return createQuery();
+
     }
 
 
@@ -51,6 +77,15 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     @Override
     public ResultSet executeQuery() throws SQLException {
+
+        String sql = createQuery();
+        if(!queryIsReady){
+
+            logger.error("Can't execute query - not all query parameters are set");
+            throw new SQLException("Not all query parameters are set");
+
+        }
+
         return null;
     }
 
