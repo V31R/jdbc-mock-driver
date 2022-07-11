@@ -24,7 +24,6 @@ public class HttpPreparedStatementTest {
     private static String url="/sql-mock";
     private static String uri;
 
-
     @BeforeAll
     static void startWireMock(WireMockRuntimeInfo wmRuntimeInfo){
 
@@ -36,6 +35,29 @@ public class HttpPreparedStatementTest {
     public void testWireMockSetUp(WireMockRuntimeInfo wmRuntimeInfo){
 
         assertEquals(host + wmRuntimeInfo.getHttpPort(),wmRuntimeInfo.getHttpBaseUrl());
+
+    }
+
+    @Test
+    public void constructorSplitString_WithoutParameters() throws IOException{
+
+        String sql = "select * from table";
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        assertEquals(sql,preparedStatement.getQuery());
+
+    }
+
+    @Test
+    public void constructorSplitString_WithParameters() throws IOException{
+
+        String sql = "select * from table where id = ?1 and name =?2 order by name";
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        assertEquals("select * from table where id =  and name = order by name",
+                preparedStatement.getQuery());
 
     }
 

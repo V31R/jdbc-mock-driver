@@ -13,10 +13,12 @@ import java.util.Calendar;
 
 public class HttpPreparedStatement implements PreparedStatement {
 
-    private static final  org.slf4j.Logger logger = LoggerFactory.getLogger(HttpStatement.class);
-
+    private static final  org.slf4j.Logger logger = LoggerFactory.getLogger(HttpPreparedStatement.class);
 
     private HttpURLConnection urlConnection;
+
+    private StringBuilder query;
+    private Object[] parameters;
 
     public HttpPreparedStatement(String uri, String sql) throws IOException {
 
@@ -27,6 +29,24 @@ public class HttpPreparedStatement implements PreparedStatement {
         urlConnection.setConnectTimeout(HttpConnectionData.timeout);
         urlConnection.setRequestMethod(HttpConnectionData.requestMethod);
 
+        var parts = sql.split("[?]{1}\\d+");
+
+        query = new StringBuilder();
+        for (var part : parts){
+
+            query.append(part);
+
+        }
+
+    }
+
+    public String getQuery() {
+        return query.toString();
+    }
+
+
+    public Object[] getParameters() {
+        return parameters;
     }
 
     @Override
