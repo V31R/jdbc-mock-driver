@@ -109,6 +109,25 @@ public class HttpPreparedStatementTest {
     }
 
     @Test
+    public void checkIndexBoundsMoreThan() throws SQLException, IOException{
+
+        String sql = "select * from table";
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        try {
+
+            preparedStatement.setBoolean(1, true);
+
+        }catch (SQLException exception){
+
+            assertNotNull(exception);
+
+        }
+
+    }
+
+    @Test
     public void setByte_IfTrue() throws SQLException, IOException{
 
         String sql = getSqlWithParameter();
@@ -249,6 +268,38 @@ public class HttpPreparedStatementTest {
 
     }
 
+    @Test
+    public void setString_IfTrue() throws SQLException, IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        preparedStatement.setString(1,"value");
+
+        assertEquals(getSqlWithStringParameter(), preparedStatement.getQuery());
+
+    }
+
+    @Test
+    public void setString_IfFalse() throws IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        try {
+
+            preparedStatement.setString(0, "");
+
+        }catch (SQLException exception){
+
+            assertNotNull(exception);
+
+        }
+
+    }
+
     private static String getSqlWithParameter(){
 
         return "select * from table where field = ?1";
@@ -267,5 +318,12 @@ public class HttpPreparedStatementTest {
         return "select * from table where field = 101";
 
     }
+
+    private static String getSqlWithStringParameter(){
+
+        return "select * from table where field = 'value'";
+
+    }
+
 
 }
