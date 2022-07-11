@@ -36,7 +36,6 @@ public class HttpConnection implements Connection {
 
     @Override
     public Statement createStatement() throws SQLException {
-
         try {
 
             var result = new HttpStatement(url);
@@ -49,13 +48,22 @@ public class HttpConnection implements Connection {
             throw  new SQLException(ioException.getMessage());
 
         }
-
-
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return new HttpPreparedStatement();
+        try {
+
+            var result = new HttpPreparedStatement(url, sql);
+            logger.debug("Created new prepared statement");
+            return result;
+
+        }catch (IOException ioException){
+            logger.error("Can't create new prepared statement due to" +
+                    ioException.getMessage());
+            throw  new SQLException(ioException.getMessage());
+
+        }
     }
 
     @Override

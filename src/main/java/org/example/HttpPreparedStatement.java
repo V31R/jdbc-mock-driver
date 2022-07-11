@@ -1,13 +1,33 @@
 package org.example;
 
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
 
 public class HttpPreparedStatement implements PreparedStatement {
+
+    private static final  org.slf4j.Logger logger = LoggerFactory.getLogger(HttpStatement.class);
+
+
+    private HttpURLConnection urlConnection;
+
+    public HttpPreparedStatement(String uri, String sql) throws IOException {
+
+        urlConnection = (HttpURLConnection) new URL(uri).openConnection();
+        urlConnection.setDoOutput(true);
+        urlConnection.setRequestProperty(HttpConnectionData.CONTENT_TYPE, HttpConnectionData.contentType);
+        urlConnection.setRequestProperty(HttpConnectionData.ACCEPT, HttpConnectionData.accept);
+        urlConnection.setConnectTimeout(HttpConnectionData.timeout);
+        urlConnection.setRequestMethod(HttpConnectionData.requestMethod);
+
+    }
 
     @Override
     public ResultSet executeQuery() throws SQLException {

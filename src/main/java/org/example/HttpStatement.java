@@ -16,17 +16,14 @@ public class HttpStatement implements Statement {
 
     private HttpURLConnection urlConnection;
 
-    private static final String contentType = "text/plain";
-    private static final String requestMethod = "POST";
-
     public HttpStatement(String uri) throws IOException {
 
         urlConnection = (HttpURLConnection) new URL(uri).openConnection();
         urlConnection.setDoOutput(true);
-        urlConnection.setRequestProperty("Content-Type",contentType);
-        urlConnection.setRequestProperty("Accept","*/*");
-        urlConnection.setConnectTimeout(10000);
-        urlConnection.setRequestMethod(requestMethod);
+        urlConnection.setRequestProperty(HttpConnectionData.CONTENT_TYPE, HttpConnectionData.contentType);
+        urlConnection.setRequestProperty(HttpConnectionData.ACCEPT, HttpConnectionData.accept);
+        urlConnection.setConnectTimeout(HttpConnectionData.timeout);
+        urlConnection.setRequestMethod(HttpConnectionData.requestMethod);
 
     }
 
@@ -40,7 +37,7 @@ public class HttpStatement implements Statement {
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
 
-        logger.info(this + " Execute query `" + sql +"'");
+        logger.info(this + " Execute query `" + sql + "'");
 
         try {
 
