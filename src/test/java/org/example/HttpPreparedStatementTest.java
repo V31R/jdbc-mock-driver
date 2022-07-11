@@ -84,7 +84,7 @@ public class HttpPreparedStatementTest {
 
         preparedStatement.setBoolean(1, true);
 
-        assertEquals("select * from table where field =  1",
+        assertEquals("select * from table where field = 1",
                 preparedStatement.getQuery());
 
     }

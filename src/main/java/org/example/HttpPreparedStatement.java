@@ -63,8 +63,11 @@ public class HttpPreparedStatement implements PreparedStatement {
             }
 
         }
+        if(parameters.length < parts.length) {
 
-        query.append(parts[parameters.length]);
+            query.append(parts[parameters.length]);
+
+        }
 
         queryIsReady = (parametersNumber == parameters.length);
 
@@ -74,7 +77,7 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     public String getQuery() {
 
-        if(parts.length == 1){
+        if(parameters.length == 0){
             return parts[0];
         }
 
