@@ -1,15 +1,19 @@
 package org.example;
 
+import com.opencsv.exceptions.CsvException;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +29,7 @@ public class HttpPreparedStatement implements PreparedStatement {
     private String[] parts;
     private String[] parameters;
     private boolean queryIsReady = false;
+    private HttpResultSet lastResult;
 
     public HttpPreparedStatement(String uri, String sql) throws IOException {
 
@@ -245,11 +250,7 @@ public class HttpPreparedStatement implements PreparedStatement {
     @Override
     public void clearParameters() throws SQLException {
 
-        for(int i = 0; i < parameters.length; i++){
-
-            parameters[i] = null;
-
-        }
+        Arrays.fill(parameters,null);
 
     }
 
@@ -275,7 +276,35 @@ public class HttpPreparedStatement implements PreparedStatement {
 
         }
 
-        return false;
+        logger.info(this + " Execute query `" + sql + "'");
+
+        try {
+
+            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+            writer.write(sql);
+            writer.close();
+
+            if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
+
+                InputStream response = urlConnection.getInputStream();
+                Scanner scanner = new Scanner(response);
+                String responseBody = scanner.useDelimiter("\\A").next();
+                lastResult = new HttpResultSet(responseBody);
+                return true;
+
+            }else{
+
+                throw new SQLException("Connection to " + urlConnection.getURL() + " failed. Code: " + urlConnection.getResponseCode());
+
+            }
+
+        }
+        catch (IOException| CsvException exception){
+
+            throw  new SQLException(exception.getMessage());
+
+        }
+
     }
 
     @Override
@@ -440,7 +469,36 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
-        return null;
+
+        logger.info(this + " Execute query `" + sql + "'");
+
+        try {
+
+            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+            writer.write(sql);
+            writer.close();
+
+            if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
+
+                InputStream response = urlConnection.getInputStream();
+                Scanner scanner = new Scanner(response);
+                String responseBody = scanner.useDelimiter("\\A").next();
+                lastResult = new HttpResultSet(responseBody);
+                return  lastResult;
+
+            }else{
+
+                throw new SQLException("Connection to " + urlConnection.getURL() + " failed. Code: " + urlConnection.getResponseCode());
+
+            }
+
+        }
+        catch (IOException| CsvException exception){
+
+            throw  new SQLException(exception.getMessage());
+
+        }
+
     }
 
     @Override
@@ -510,12 +568,41 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     @Override
     public boolean execute(String sql) throws SQLException {
-        return false;
+
+        logger.info(this + " Execute query `" + sql + "'");
+
+        try {
+
+            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+            writer.write(sql);
+            writer.close();
+
+            if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
+
+                InputStream response = urlConnection.getInputStream();
+                Scanner scanner = new Scanner(response);
+                String responseBody = scanner.useDelimiter("\\A").next();
+                lastResult = new HttpResultSet(responseBody);
+                return true;
+
+            }else{
+
+                throw new SQLException("Connection to " + urlConnection.getURL() + " failed. Code: " + urlConnection.getResponseCode());
+
+            }
+
+        }
+        catch (IOException| CsvException exception){
+
+            throw  new SQLException(exception.getMessage());
+
+        }
+
     }
 
     @Override
     public ResultSet getResultSet() throws SQLException {
-        return null;
+        return lastResult;
     }
 
     @Override

@@ -13,7 +13,7 @@ import java.sql.*;
 @Suite
 public class HttpPreparedStatementParametersTest {
 
-    private static String uri = "http://localhost:8080/sql-mock";
+    private static final String uri = "http://localhost:8080/sql-mock";
 
     @Test
     public void constructorSplitString_WithoutParameters() throws IOException{
@@ -49,6 +49,24 @@ public class HttpPreparedStatementParametersTest {
                 preparedStatement.getQuery());
 
         assertEquals(1, preparedStatement.getParameters().length);
+
+    }
+
+    @Test
+    public void clearParameters() throws IOException, SQLException{
+
+        String sql = "select * from table where id = ?1 and name =?2 order by name";
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        preparedStatement.setBoolean(1, true);
+        preparedStatement.setBoolean(2, true);
+
+        preparedStatement.clearParameters();
+
+        for(String parameter : preparedStatement.getParameters()) {
+            assertNull(parameter);
+        }
 
     }
 
