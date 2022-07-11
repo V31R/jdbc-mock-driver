@@ -31,4 +31,13 @@ public class HttpConnectionTest {
 
     }
 
+    @Test
+    public void connectionPrepareStatement() throws SQLException{
+
+        Connection connection = new HttpConnection(url);
+
+        assertNotNull(connection.prepareStatement("sql"));
+
+    }
+
 }
