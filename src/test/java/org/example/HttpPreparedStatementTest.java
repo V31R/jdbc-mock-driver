@@ -20,8 +20,8 @@ import java.sql.*;
 @WireMockTest
 public class HttpPreparedStatementTest {
 
-    private static String host="http://localhost:";
-    private static String url="/sql-mock";
+    private static final String host="http://localhost:";
+    private static final String url="/sql-mock";
     private static String uri;
 
     @BeforeAll
@@ -58,6 +58,213 @@ public class HttpPreparedStatementTest {
 
         assertEquals("select * from table where id =  and name = order by name",
                 preparedStatement.getQuery());
+
+    }
+
+    @Test
+    public void constructorSplitString_WithParameterAtEnd() throws IOException{
+
+        String sql = "select * from table where id = ?1";
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        assertEquals("select * from table where id = ",
+                preparedStatement.getQuery());
+
+        assertEquals(1, preparedStatement.getParameters().length);
+
+    }
+
+    @Test
+    public void setBoolean_IfTrue() throws SQLException, IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        preparedStatement.setBoolean(1, true);
+
+        assertEquals("select * from table where field =  1",
+                preparedStatement.getQuery());
+
+    }
+
+    @Test
+    public void setBoolean_IfFalse() throws IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        try {
+
+            preparedStatement.setBoolean(0, true);
+
+        }catch (SQLException exception){
+
+            assertNotNull(exception);
+
+        }
+
+    }
+
+    @Test
+    public void setByte_IfTrue() throws SQLException, IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        byte value = getIntegerParameterValue();
+
+        preparedStatement.setByte(1, value);
+
+        assertEquals(getSqlWithIntegerParameter(), preparedStatement.getQuery());
+
+    }
+
+    @Test
+    public void setByte_IfFalse() throws IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        byte value = getIntegerParameterValue();
+        try {
+
+            preparedStatement.setByte(0, value);
+
+        }catch (SQLException exception){
+
+            assertNotNull(exception);
+
+        }
+
+    }
+
+
+    @Test
+    public void setShort_IfTrue() throws SQLException, IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        short value = getIntegerParameterValue();
+
+        preparedStatement.setShort(1, value);
+
+        assertEquals(getSqlWithIntegerParameter(), preparedStatement.getQuery());
+
+    }
+
+    @Test
+    public void setShort_IfFalse() throws IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        short value = getIntegerParameterValue();
+        try {
+
+            preparedStatement.setShort(0, value);
+
+        }catch (SQLException exception){
+
+            assertNotNull(exception);
+
+        }
+
+    }
+
+    @Test
+    public void setInt_IfTrue() throws SQLException, IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        int value = getIntegerParameterValue();
+
+        preparedStatement.setInt(1, value);
+
+        assertEquals(getSqlWithIntegerParameter(), preparedStatement.getQuery());
+
+    }
+
+    @Test
+    public void setInt_IfFalse() throws IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        int value = getIntegerParameterValue();
+        try {
+
+            preparedStatement.setInt(0, value);
+
+        }catch (SQLException exception){
+
+            assertNotNull(exception);
+
+        }
+
+    }
+
+    @Test
+    public void setLong_IfTrue() throws SQLException, IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        long value = getIntegerParameterValue();
+
+        preparedStatement.setLong(1, value);
+
+        assertEquals(getSqlWithIntegerParameter(), preparedStatement.getQuery());
+
+    }
+
+    @Test
+    public void setLong_IfFalse() throws IOException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        long value = getIntegerParameterValue();
+        try {
+
+            preparedStatement.setLong(0, value);
+
+        }catch (SQLException exception){
+
+            assertNotNull(exception);
+
+        }
+
+    }
+
+    private static String getSqlWithParameter(){
+
+        return "select * from table where field = ?1";
+
+    }
+
+
+    private static byte getIntegerParameterValue(){
+
+        return 101;
+
+    }
+
+    private static String getSqlWithIntegerParameter(){
+
+        return "select * from table where field = 101";
 
     }
 

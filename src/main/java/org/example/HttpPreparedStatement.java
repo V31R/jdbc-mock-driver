@@ -10,17 +10,22 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HttpPreparedStatement implements PreparedStatement {
 
     private static final  org.slf4j.Logger logger = LoggerFactory.getLogger(HttpPreparedStatement.class);
 
+    private static final String parameterRegex = "[?]{1}\\d+";
+
     private HttpURLConnection urlConnection;
 
     private StringBuilder query;
     private String[] parts;
-    private Object[] parameters;
+    private String[] parameters;
     private boolean queryIsReady = false;
+
     public HttpPreparedStatement(String uri, String sql) throws IOException {
 
         urlConnection = (HttpURLConnection) new URL(uri).openConnection();
@@ -30,8 +35,15 @@ public class HttpPreparedStatement implements PreparedStatement {
         urlConnection.setConnectTimeout(HttpConnectionData.timeout);
         urlConnection.setRequestMethod(HttpConnectionData.requestMethod);
 
-        parts = sql.split("[?]{1}\\d+");
-        parameters = new Object[parts.length-1];
+        Pattern parameterPattern = Pattern.compile(parameterRegex);
+
+        Matcher matcher = parameterPattern.matcher(sql);
+        int parametersCount = 0;
+        while(matcher.find()){
+            parametersCount++;
+        }
+        parts = sql.split(parameterRegex);
+        parameters = new String[parametersCount];
 
     }
 
@@ -71,7 +83,7 @@ public class HttpPreparedStatement implements PreparedStatement {
     }
 
 
-    public Object[] getParameters() {
+    public String[] getParameters() {
         return parameters;
     }
 
@@ -94,53 +106,101 @@ public class HttpPreparedStatement implements PreparedStatement {
         return 0;
     }
 
+    private void checkParameterIndexBounds(int parameterIndex) throws SQLException{
+
+        if(parameterIndex <= 0 || parameterIndex > parameters.length){
+
+            throw new SQLException("Index out of range");
+
+        }
+
+    }
+
     @Override
     public void setNull(int parameterIndex, int sqlType) throws SQLException {
+
+        checkParameterIndexBounds(parameterIndex);
 
     }
 
     @Override
     public void setBoolean(int parameterIndex, boolean x) throws SQLException {
 
+        checkParameterIndexBounds(parameterIndex);
+
+        parameters[parameterIndex - 1] = x?"1":"0";
+
     }
 
     @Override
     public void setByte(int parameterIndex, byte x) throws SQLException {
+
+        checkParameterIndexBounds(parameterIndex);
+
+        parameters[parameterIndex - 1] = String.valueOf(x);
 
     }
 
     @Override
     public void setShort(int parameterIndex, short x) throws SQLException {
 
+        checkParameterIndexBounds(parameterIndex);
+
+        parameters[parameterIndex - 1] = String.valueOf(x);
+
     }
 
     @Override
     public void setInt(int parameterIndex, int x) throws SQLException {
+
+        checkParameterIndexBounds(parameterIndex);
+
+        parameters[parameterIndex - 1] = String.valueOf(x);
 
     }
 
     @Override
     public void setLong(int parameterIndex, long x) throws SQLException {
 
+        checkParameterIndexBounds(parameterIndex);
+
+        parameters[parameterIndex - 1] = String.valueOf(x);
+
     }
 
     @Override
     public void setFloat(int parameterIndex, float x) throws SQLException {
+
+        checkParameterIndexBounds(parameterIndex);
+
+        parameters[parameterIndex - 1] = String.valueOf(x);
 
     }
 
     @Override
     public void setDouble(int parameterIndex, double x) throws SQLException {
 
+        checkParameterIndexBounds(parameterIndex);
+
+        parameters[parameterIndex - 1] = String.valueOf(x);
+
     }
 
     @Override
     public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException {
 
+        checkParameterIndexBounds(parameterIndex);
+
+        parameters[parameterIndex - 1] = String.valueOf(x);
+
     }
 
     @Override
     public void setString(int parameterIndex, String x) throws SQLException {
+
+        checkParameterIndexBounds(parameterIndex);
+
+        parameters[parameterIndex - 1] = "'" + x + "'";
 
     }
 
@@ -182,6 +242,12 @@ public class HttpPreparedStatement implements PreparedStatement {
     @Override
     public void clearParameters() throws SQLException {
 
+        for(int i = 0; i < parameters.length; i++){
+
+            parameters[i] = null;
+
+        }
+
     }
 
     @Override
@@ -196,6 +262,16 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     @Override
     public boolean execute() throws SQLException {
+
+        String sql = createQuery();
+
+        if(!queryIsReady){
+
+            logger.error("Can't execute query - not all query parameters are set");
+            throw new SQLException("Not all query parameters are set");
+
+        }
+
         return false;
     }
 
