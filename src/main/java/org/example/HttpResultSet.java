@@ -66,17 +66,15 @@ public class HttpResultSet implements ResultSet {
 
     }
 
-    @Override
-    public boolean getBoolean(int columnIndex) throws SQLException {
+    private boolean getBooleanImpl(int columnIndex) throws SQLException{
 
-        checkBounds(columnIndex);
-
-        if(data.get(cursorPos)[columnIndex].equals("1")){
+        var value = data.get(cursorPos)[columnIndex].trim();
+        if(value.equals("1")){
 
             return true;
 
         }
-        else if(data.get(cursorPos)[columnIndex].equals("0")){
+        else if(value.equals("0")){
 
             return false;
 
@@ -85,6 +83,14 @@ public class HttpResultSet implements ResultSet {
             throw new SQLException("This isn't boolean value");
 
         }
+
+    }
+
+    @Override
+    public boolean getBoolean(int columnIndex) throws SQLException {
+
+        checkBounds(columnIndex);
+        return getBooleanImpl(columnIndex);
 
     }
 
