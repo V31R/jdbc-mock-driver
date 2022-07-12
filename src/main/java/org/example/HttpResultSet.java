@@ -11,20 +11,28 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class HttpResultSet implements ResultSet {
 
     List<String[]> data;
+    Map<String, Integer> labels;
     int cursorPos;
 
     HttpResultSet(String csvString) throws IOException, CsvException {
 
         CSVReader csvReader = new CSVReader(new StringReader(csvString));
         data = csvReader.readAll();
-
+        labels = new HashMap<>();
         cursorPos = 0;//0 is label's row
+
+        for(int i =0; i < data.get(cursorPos).length; i++){
+
+            labels.put(data.get(cursorPos)[i],i);
+
+        }
 
     }
 
@@ -39,13 +47,25 @@ public class HttpResultSet implements ResultSet {
     @Override
     public void close() throws SQLException {
 
-        data=null;
+        data = null;
 
     }
 
     @Override
     public boolean wasNull() throws SQLException {
         return false;
+    }
+
+    private int getIndexByLabel(String label) throws SQLException{
+
+        Integer result = labels.get(label);
+        if(result == null){
+
+            throw new SQLException("Label'" + label + "' doesn't exist");
+
+        }
+        return  result;
+
     }
 
     private void checkBounds(int columnIndex) throws  SQLException{
@@ -258,47 +278,65 @@ public class HttpResultSet implements ResultSet {
 
     @Override
     public String getString(String columnLabel) throws SQLException {
-        return null;
+
+        return getString(getIndexByLabel(columnLabel));
+
     }
 
     @Override
     public boolean getBoolean(String columnLabel) throws SQLException {
-        return false;
+
+        return getBoolean(getIndexByLabel(columnLabel));
+
     }
 
     @Override
     public byte getByte(String columnLabel) throws SQLException {
-        return 0;
+
+        return getByte(getIndexByLabel(columnLabel));
+
     }
 
     @Override
     public short getShort(String columnLabel) throws SQLException {
-        return 0;
+
+        return getShort(getIndexByLabel(columnLabel));
+
     }
 
     @Override
     public int getInt(String columnLabel) throws SQLException {
-        return 0;
+
+        return getInt(getIndexByLabel(columnLabel));
+
     }
 
     @Override
     public long getLong(String columnLabel) throws SQLException {
-        return 0;
+
+        return getLong(getIndexByLabel(columnLabel));
+
     }
 
     @Override
     public float getFloat(String columnLabel) throws SQLException {
-        return 0;
+
+        return getFloat(getIndexByLabel(columnLabel));
+
     }
 
     @Override
     public double getDouble(String columnLabel) throws SQLException {
-        return 0;
+
+        return getDouble(getIndexByLabel(columnLabel));
+
     }
 
     @Override
     public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-        return null;
+
+        return getBigDecimal(getIndexByLabel(columnLabel));
+
     }
 
     @Override
@@ -368,7 +406,9 @@ public class HttpResultSet implements ResultSet {
 
     @Override
     public int findColumn(String columnLabel) throws SQLException {
-        return 0;
+
+        return getIndexByLabel(columnLabel);
+
     }
 
     @Override
