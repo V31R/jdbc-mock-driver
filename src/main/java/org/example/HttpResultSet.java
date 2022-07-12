@@ -24,19 +24,22 @@ public class HttpResultSet implements ResultSet {
         CSVReader csvReader = new CSVReader(new StringReader(csvString));
         data = csvReader.readAll();
 
-        cursorPos = 1;//0 is label's row
+        cursorPos = 0;//0 is label's row
 
     }
 
     @Override
     public boolean next() throws SQLException {
 
+        cursorPos++;
         return cursorPos < data.size();
 
     }
 
     @Override
     public void close() throws SQLException {
+
+        data=null;
 
     }
 
@@ -45,56 +48,184 @@ public class HttpResultSet implements ResultSet {
         return false;
     }
 
+    private void checkBounds(int columnIndex) throws  SQLException{
+
+        if(columnIndex >= data.get(cursorPos).length || columnIndex <0){
+
+            throw  new SQLException("Index out of range");
+
+        }
+    }
+
     @Override
     public String getString(int columnIndex) throws SQLException {
 
-        if(columnIndex < data.get(cursorPos).length && columnIndex >=0){
+        checkBounds(columnIndex);
 
-            return data.get(cursorPos)[columnIndex];
-
-        }
-        return null;
+        return data.get(cursorPos)[columnIndex];
 
     }
 
     @Override
     public boolean getBoolean(int columnIndex) throws SQLException {
-        return false;
+
+        checkBounds(columnIndex);
+
+        if(data.get(cursorPos)[columnIndex].equals("1")){
+
+            return true;
+
+        }
+        else if(data.get(cursorPos)[columnIndex].equals("0")){
+
+            return false;
+
+        }else{
+
+            throw new SQLException("This isn't boolean value");
+
+        }
+
     }
 
     @Override
     public byte getByte(int columnIndex) throws SQLException {
-        return 0;
+
+        checkBounds(columnIndex);
+
+        byte value = 0;
+        try {
+
+            value = Byte.parseByte(data.get(cursorPos)[columnIndex]);
+
+        }catch (NumberFormatException numberFormatException){
+
+            throw new SQLException("This isn't byte value");
+
+        }
+
+        return value;
+
     }
 
     @Override
     public short getShort(int columnIndex) throws SQLException {
-        return 0;
+
+        checkBounds(columnIndex);
+
+        short value = 0;
+        try {
+
+            value = Short.parseShort(data.get(cursorPos)[columnIndex]);
+
+        }catch (NumberFormatException numberFormatException){
+
+            throw new SQLException("This isn't short value");
+
+        }
+
+        return value;
+
     }
 
     @Override
     public int getInt(int columnIndex) throws SQLException {
-        return 0;
+
+        checkBounds(columnIndex);
+
+        int value = 0;
+        try {
+
+            value = Integer.parseInt(data.get(cursorPos)[columnIndex]);
+
+        }catch (NumberFormatException numberFormatException){
+
+            throw new SQLException("This isn't int value");
+
+        }
+
+        return value;
+
     }
 
     @Override
     public long getLong(int columnIndex) throws SQLException {
-        return 0;
+
+        checkBounds(columnIndex);
+
+        long value = 0;
+        try {
+
+            value = Long.parseLong(data.get(cursorPos)[columnIndex]);
+
+        }catch (NumberFormatException numberFormatException){
+
+            throw new SQLException("This isn't long value");
+
+        }
+
+        return value;
+
     }
 
     @Override
     public float getFloat(int columnIndex) throws SQLException {
-        return 0;
+
+        checkBounds(columnIndex);
+
+        float value = 0;
+        try {
+
+            value = Float.parseFloat(data.get(cursorPos)[columnIndex]);
+
+        }catch (NumberFormatException numberFormatException){
+
+            throw new SQLException("This isn't float value");
+
+        }
+
+        return value;
+
     }
 
     @Override
     public double getDouble(int columnIndex) throws SQLException {
-        return 0;
+
+        checkBounds(columnIndex);
+
+        double value = 0;
+        try {
+
+            value = Double.parseDouble(data.get(cursorPos)[columnIndex]);
+
+        }catch (NumberFormatException numberFormatException){
+
+            throw new SQLException("This isn't double value");
+
+        }
+
+        return value;
+
     }
 
     @Override
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-        return null;
+
+        checkBounds(columnIndex);
+
+        BigDecimal value =  new BigDecimal(0);
+        try {
+
+            value = BigDecimal.valueOf(Double.parseDouble(data.get(cursorPos)[columnIndex]));
+
+        }catch (NumberFormatException numberFormatException){
+
+            throw new SQLException("This isn't big decimal value");
+
+        }
+
+        return value;
+
     }
 
     @Override
