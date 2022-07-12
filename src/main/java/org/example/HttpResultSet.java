@@ -61,7 +61,7 @@ public class HttpResultSet implements ResultSet {
         Integer result = labels.get(label);
         if(result == null){
 
-            throw new SQLException("Label'" + label + "' doesn't exist");
+            throw new SQLException("Label '" + label + "' doesn't exist");
 
         }
         return  result;
@@ -443,7 +443,9 @@ public class HttpResultSet implements ResultSet {
 
     @Override
     public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
-        return null;
+
+        return getBigDecimal(getIndexByLabel(columnLabel));
+
     }
 
     @Override

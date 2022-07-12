@@ -1,7 +1,6 @@
 package org.example;
 
 import com.opencsv.exceptions.CsvException;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.Suite;
@@ -14,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Suite
 public class HttpResultSetTest {
+
+    private static final String abracadabra = "abracadabra";
 
     private static HttpResultSet httpResultSet;
 
@@ -42,14 +43,14 @@ public class HttpResultSetTest {
     }
 
     @Test
-    public void getXXXByIndex_IfFalse_IndexOutOfRange_LessZero(){
+    public void getXXXByIndex_IfFalse_IndexOutOfRange_LessZero() throws SQLException{
+
+        httpResultSet.next();
 
         try {
-            if (httpResultSet.next()) {
 
-                assertTrue(httpResultSet.getBoolean(-1));
+            httpResultSet.getBoolean(-1);
 
-            }
         }
         catch (SQLException sqlException){
 
@@ -60,14 +61,14 @@ public class HttpResultSetTest {
     }
 
     @Test
-    public void getXXXByIndex_IfFalse_IndexOutOfRange_MoreThanSize(){
+    public void getXXXByIndex_IfFalse_IndexOutOfRange_MoreThanSize() throws SQLException{
+
+        httpResultSet.next();
 
         try {
-            if (httpResultSet.next()) {
 
-                assertTrue(httpResultSet.getBoolean(Integer.MAX_VALUE));
+            httpResultSet.getBoolean(Integer.MAX_VALUE);
 
-            }
         }
         catch (SQLException sqlException){
 
@@ -114,13 +115,14 @@ public class HttpResultSetTest {
     }
 
     @Test
-    public void getBooleanByIndex_IfFalse_WrongFormat(){
+    public void getBooleanByIndex_IfFalse_WrongFormat() throws SQLException{
+
+
+        httpResultSet.next();
 
         try {
 
-            httpResultSet.next();
-
-            boolean value = httpResultSet.getBoolean(1);
+            httpResultSet.getBoolean(1);
 
         }
         catch (SQLException sqlException){
@@ -333,21 +335,346 @@ public class HttpResultSetTest {
     }
 
 
+    @Test
+    public void getStringByColumnLabel_IfTrue() throws SQLException{
+
+        httpResultSet.next();
+
+        String value = httpResultSet.getString(getStringName());
+
+        assertEquals(getString(),value);
+
+
+    }
+
+    @Test
+    public void getStringByColumnLabel_IfFalse_WrongLabel() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getString(abracadabra);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
+
+    @Test
+    public void getBooleanByColumnLabel_IfTrue_TrueValue() throws SQLException{
+
+        httpResultSet.next();
+
+        boolean value = httpResultSet.getBoolean(getBooleanName());
+
+        assertTrue(value);
+
+    }
+
+
+    @Test
+    public void getBooleanByColumnLabel_IfFalse_WrongLabel() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getBoolean(abracadabra);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
+    @Test
+    public void getByteByColumnLabel_IfTrue() throws SQLException{
+
+        httpResultSet.next();
+
+        byte value = httpResultSet.getByte(getByteName());
+
+        assertEquals(getByte(),value);
+
+    }
+
+    @Test
+    public void getByteByColumnLabel_IfFalse_WrongLabel() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getByte(abracadabra);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
+    @Test
+    public void getShortByColumnLabel_IfTrue() throws SQLException{
+
+        httpResultSet.next();
+
+        short value = httpResultSet.getShort(getShortName());
+
+        assertEquals(getShort(),value);
+
+    }
+
+    @Test
+    public void getShortByColumnLabel_IfFalse_WrongLabel() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getShort(abracadabra);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
+    @Test
+    public void getIntByColumnLabel_IfTrue() throws SQLException{
+
+        httpResultSet.next();
+
+        int value = httpResultSet.getInt(getIntName());
+
+        assertEquals(getInt(),value);
+
+    }
+
+    @Test
+    public void getIntByColumnLabel_IfFalse_WrongLabel() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getInt(abracadabra);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
+    @Test
+    public void getLongByColumnLabel_IfTrue() throws SQLException{
+
+        httpResultSet.next();
+
+        long value = httpResultSet.getLong(getLongName());
+
+        assertEquals(getLong(),value);
+
+    }
+
+    @Test
+    public void getLongByColumnLabel_IfFalse_WrongLabel() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getLong(abracadabra);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+    @Test
+    public void getFloatByColumnLabel_IfTrue() throws SQLException{
+
+        httpResultSet.next();
+
+        float value = httpResultSet.getFloat(getFloatName());
+
+        assertEquals(getFloat(),value);
+
+    }
+
+    @Test
+    public void getFloatByColumnLabel_IfFalse_WrongLabel() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getFloat(abracadabra);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
+    @Test
+    public void getDoubleByColumnLabel_IfTrue() throws SQLException{
+
+        httpResultSet.next();
+
+        double value = httpResultSet.getDouble(getDoubleName());
+
+        assertEquals(getDouble(),value);
+
+    }
+
+    @Test
+    public void getDoubleByColumnLabel_IfFalse_WrongLabel() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getDouble(abracadabra);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+    @Test
+    public void getBigDecimalByColumnLabel_IfTrue() throws SQLException{
+
+        httpResultSet.next();
+
+        BigDecimal value = httpResultSet.getBigDecimal(getBigDecimalName());
+
+        assertEquals(getBigDecimal(),value);
+
+    }
+
+    @Test
+    public void getBigDecimalByColumnLabel_IfFalse_WrongLabel() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getBigDecimal(abracadabra);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
 
 
     static String getCsvData(){
 
-        return "\"bool\",\"byte\",\"short\",\"int\",\"long\",\"float\",\"double\",\"big_decimal\",\"string\""
+        return  "\"" + getBooleanName()+ "\""
+                + "," + "\"" + getByteName() + "\""
+                + "," + "\"" + getShortName() + "\""
+                + "," + "\"" + getIntName() + "\""
+                + "," + "\"" + getLongName() + "\""
+                + "," + "\"" + getFloatName() + "\""
+                + "," + "\"" + getDoubleName() + "\""
+                + "," + "\"" + getBigDecimalName() + "\""
+                + "," + "\"" + getStringName() + "\""
+
                 + "\n 1," + getByte()
                 + "," + getShort()
                 + "," + getInt()
                 + "," + getLong()
                 + "," + getFloat()
                 + "," + getDouble()
-                + "," + getBigDecimal().toString()
+                + "," + getBigDecimal()
                 + "," + getString()
+
                 + "\n 0, 0, 0, 0, 0, 0.05, 9.75, 9.75, \"test\"";
 
+
+    }
+    static String getBooleanName(){
+
+        return "bool";
+
+    }
+
+    static String getByteName(){
+
+        return "byte";
+
+    }
+
+    static String getShortName(){
+
+        return "short";
+
+    }
+
+    static String getIntName(){
+
+        return "int";
+
+    }
+
+    static String getLongName(){
+
+        return "long";
+
+    }
+
+    static String getFloatName(){
+
+        return "float";
+
+    }
+
+    static String getDoubleName(){
+
+        return "double";
+
+    }
+
+    static String getBigDecimalName(){
+
+        return "big_decimal";
+
+    }
+
+    static String getStringName(){
+
+        return "string";
 
     }
 
