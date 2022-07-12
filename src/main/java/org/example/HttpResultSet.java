@@ -122,7 +122,7 @@ public class HttpResultSet implements ResultSet {
         byte value = 0;
         try {
 
-            value = Byte.parseByte(data.get(cursorPos)[columnIndex]);
+            value = Byte.parseByte(data.get(cursorPos)[columnIndex].trim());
 
         }catch (NumberFormatException numberFormatException){
 
@@ -142,7 +142,7 @@ public class HttpResultSet implements ResultSet {
         short value = 0;
         try {
 
-            value = Short.parseShort(data.get(cursorPos)[columnIndex]);
+            value = Short.parseShort(data.get(cursorPos)[columnIndex].trim());
 
         }catch (NumberFormatException numberFormatException){
 
@@ -162,7 +162,7 @@ public class HttpResultSet implements ResultSet {
         int value = 0;
         try {
 
-            value = Integer.parseInt(data.get(cursorPos)[columnIndex]);
+            value = Integer.parseInt(data.get(cursorPos)[columnIndex].trim());
 
         }catch (NumberFormatException numberFormatException){
 
@@ -182,7 +182,7 @@ public class HttpResultSet implements ResultSet {
         long value = 0;
         try {
 
-            value = Long.parseLong(data.get(cursorPos)[columnIndex]);
+            value = Long.parseLong(data.get(cursorPos)[columnIndex].trim());
 
         }catch (NumberFormatException numberFormatException){
 
@@ -202,7 +202,7 @@ public class HttpResultSet implements ResultSet {
         float value = 0;
         try {
 
-            value = Float.parseFloat(data.get(cursorPos)[columnIndex]);
+            value = Float.parseFloat(data.get(cursorPos)[columnIndex].trim());
 
         }catch (NumberFormatException numberFormatException){
 
@@ -222,7 +222,7 @@ public class HttpResultSet implements ResultSet {
         double value = 0;
         try {
 
-            value = Double.parseDouble(data.get(cursorPos)[columnIndex]);
+            value = Double.parseDouble(data.get(cursorPos)[columnIndex].trim());
 
         }catch (NumberFormatException numberFormatException){
 
