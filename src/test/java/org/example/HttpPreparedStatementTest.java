@@ -7,6 +7,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
 import org.junit.jupiter.api.BeforeAll;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -38,18 +39,33 @@ public class HttpPreparedStatementTest {
 
     }
 
+    @BeforeEach
+    void  resetWireMock(WireMockRuntimeInfo wmRuntimeInfo){
+
+        wmRuntimeInfo.getWireMock().resetMappings();
+
+    }
+
     @Test
-    public void executePreparedQuery_IfTrue() throws IOException, SQLException{
+    public void executePreparedQuery_IfTrue(WireMockRuntimeInfo wmRuntimeInfo) throws IOException, SQLException{
+
+        wmRuntimeInfo.getWireMock().stubFor(post(WireMock.urlEqualTo(url))
+                .willReturn(okForContentType("text/plain","\"Timestamp\",\"Age\",\"Gender\" " +
+                        "\n 2014-08-27 11:29:31,37,\"Female\"")));
 
         String sql = getSqlWithParameter();
 
         HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
         preparedStatement.setInt(1,getParameterValue());
 
+        ResultSet result = preparedStatement.executeQuery();
+
+        assertNotNull(result);
+
     }
 
     @Test
-    public void executePreparedQuery_IfFalse() throws IOException{
+    public void executePreparedQuery_IfFalse_NotAllParameters() throws IOException{
 
         String sql = getSqlWithParameter();
 
@@ -65,6 +81,25 @@ public class HttpPreparedStatementTest {
 
         }
 
+    }
+
+    @Test
+    public void executePreparedQuery_IfFalse_HttpConnectionError() throws IOException, SQLException{
+
+        String sql = getSqlWithParameter();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+        preparedStatement.setInt(1,getParameterValue());
+
+        try {
+
+            preparedStatement.execute();
+
+        }catch(SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
 
     }
 
@@ -81,8 +116,5 @@ public class HttpPreparedStatementTest {
         return 2022;
 
     }
-
-
-
 
 }

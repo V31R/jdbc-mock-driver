@@ -8,6 +8,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
 import org.junit.jupiter.api.BeforeAll;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -33,6 +34,13 @@ public class HttpStatementTest {
 
     }
 
+    @BeforeEach
+    void  resetWireMock(WireMockRuntimeInfo wmRuntimeInfo){
+
+        wmRuntimeInfo.getWireMock().resetMappings();
+
+    }
+
     @Test
     public void testWireMockSetUp(WireMockRuntimeInfo wmRuntimeInfo){
 
@@ -40,8 +48,9 @@ public class HttpStatementTest {
 
     }
 
+
     @Test
-    public void requestTest(WireMockRuntimeInfo wmRuntimeInfo) throws IOException, SQLException {
+    public void requestTest_IfTrue(WireMockRuntimeInfo wmRuntimeInfo) throws IOException, SQLException {
 
         wmRuntimeInfo.getWireMock().stubFor(post(WireMock.urlEqualTo(url))
                 .willReturn(okForContentType("text/plain","\"Timestamp\",\"Age\",\"Gender\" " +
@@ -55,6 +64,23 @@ public class HttpStatementTest {
 
     }
 
+
+    @Test
+    public void requestTest_IfFalse(WireMockRuntimeInfo wmRuntimeInfo) throws IOException{
+
+        HttpStatement testStatement = new HttpStatement(uri);
+        try {
+
+            var result = testStatement.executeQuery("select * from table;");
+
+        }catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+
+    }
 
 
 }
