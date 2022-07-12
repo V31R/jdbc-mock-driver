@@ -25,7 +25,6 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     private HttpURLConnection urlConnection;
 
-    private StringBuilder query;
     private String[] parts;
     private String[] parameters;
     private boolean queryIsReady = false;
@@ -56,7 +55,7 @@ public class HttpPreparedStatement implements PreparedStatement {
 
         int parametersNumber = 0;
 
-        query = new StringBuilder();
+        StringBuilder query = new StringBuilder();
         for(int i =0; i < parameters.length;i++){
 
             query.append(parts[i]);
@@ -90,13 +89,7 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     }
 
-
-    public String[] getParameters() {
-        return parameters;
-    }
-
-    @Override
-    public ResultSet executeQuery() throws SQLException {
+    private String createQueryBeforeExecute() throws SQLException{
 
         String sql = createQuery();
         if(!queryIsReady){
@@ -106,7 +99,54 @@ public class HttpPreparedStatement implements PreparedStatement {
 
         }
 
-        return null;
+        return sql;
+
+    }
+
+    private void executeRequest(String sql) throws SQLException{
+
+        logger.info(this + " Execute query `" + sql + "'");
+
+        try {
+
+            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+            writer.write(sql);
+            writer.close();
+
+            if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
+
+                InputStream response = urlConnection.getInputStream();
+                Scanner scanner = new Scanner(response);
+                String responseBody = scanner.useDelimiter("\\A").next();
+                lastResult = new HttpResultSet(responseBody);
+
+            }else{
+
+                throw new SQLException("Connection to " + urlConnection.getURL() + " failed. Code: " + urlConnection.getResponseCode());
+
+            }
+
+        }
+        catch (IOException| CsvException exception){
+
+            throw  new SQLException(exception.getMessage());
+
+        }
+
+    }
+
+
+    public String[] getParameters() {
+        return parameters;
+    }
+
+    @Override
+    public ResultSet executeQuery() throws SQLException {
+
+        executeRequest(createQueryBeforeExecute());
+
+        return lastResult;
+
     }
 
     @Override
@@ -267,43 +307,8 @@ public class HttpPreparedStatement implements PreparedStatement {
     @Override
     public boolean execute() throws SQLException {
 
-        String sql = createQuery();
-
-        if(!queryIsReady){
-
-            logger.error("Can't execute query - not all query parameters are set");
-            throw new SQLException("Not all query parameters are set");
-
-        }
-
-        logger.info(this + " Execute query `" + sql + "'");
-
-        try {
-
-            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
-            writer.write(sql);
-            writer.close();
-
-            if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
-
-                InputStream response = urlConnection.getInputStream();
-                Scanner scanner = new Scanner(response);
-                String responseBody = scanner.useDelimiter("\\A").next();
-                lastResult = new HttpResultSet(responseBody);
-                return true;
-
-            }else{
-
-                throw new SQLException("Connection to " + urlConnection.getURL() + " failed. Code: " + urlConnection.getResponseCode());
-
-            }
-
-        }
-        catch (IOException| CsvException exception){
-
-            throw  new SQLException(exception.getMessage());
-
-        }
+        executeRequest(createQueryBeforeExecute());
+        return lastResult != null;
 
     }
 
@@ -470,34 +475,8 @@ public class HttpPreparedStatement implements PreparedStatement {
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
 
-        logger.info(this + " Execute query `" + sql + "'");
-
-        try {
-
-            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
-            writer.write(sql);
-            writer.close();
-
-            if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
-
-                InputStream response = urlConnection.getInputStream();
-                Scanner scanner = new Scanner(response);
-                String responseBody = scanner.useDelimiter("\\A").next();
-                lastResult = new HttpResultSet(responseBody);
-                return  lastResult;
-
-            }else{
-
-                throw new SQLException("Connection to " + urlConnection.getURL() + " failed. Code: " + urlConnection.getResponseCode());
-
-            }
-
-        }
-        catch (IOException| CsvException exception){
-
-            throw  new SQLException(exception.getMessage());
-
-        }
+        executeRequest(sql);
+        return lastResult;
 
     }
 
@@ -569,34 +548,8 @@ public class HttpPreparedStatement implements PreparedStatement {
     @Override
     public boolean execute(String sql) throws SQLException {
 
-        logger.info(this + " Execute query `" + sql + "'");
-
-        try {
-
-            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
-            writer.write(sql);
-            writer.close();
-
-            if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
-
-                InputStream response = urlConnection.getInputStream();
-                Scanner scanner = new Scanner(response);
-                String responseBody = scanner.useDelimiter("\\A").next();
-                lastResult = new HttpResultSet(responseBody);
-                return true;
-
-            }else{
-
-                throw new SQLException("Connection to " + urlConnection.getURL() + " failed. Code: " + urlConnection.getResponseCode());
-
-            }
-
-        }
-        catch (IOException| CsvException exception){
-
-            throw  new SQLException(exception.getMessage());
-
-        }
+        executeRequest(sql);
+        return  lastResult != null;
 
     }
 
