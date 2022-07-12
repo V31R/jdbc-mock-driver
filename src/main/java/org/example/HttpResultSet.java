@@ -217,20 +217,7 @@ public class HttpResultSet implements ResultSet {
     @Override
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
 
-        checkBounds(columnIndex);
-
-        BigDecimal value =  new BigDecimal(0);
-        try {
-
-            value = BigDecimal.valueOf(Double.parseDouble(data.get(cursorPos)[columnIndex]));
-
-        }catch (NumberFormatException numberFormatException){
-
-            throw new SQLException("This isn't big decimal value");
-
-        }
-
-        return value;
+        return null;
 
     }
 
@@ -396,7 +383,22 @@ public class HttpResultSet implements ResultSet {
 
     @Override
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-        return null;
+
+        checkBounds(columnIndex);
+
+        BigDecimal value =  new BigDecimal(0);
+        try {
+
+            value = BigDecimal.valueOf(Double.parseDouble(data.get(cursorPos)[columnIndex]));
+
+        }catch (NumberFormatException numberFormatException){
+
+            throw new SQLException("This isn't big decimal value");
+
+        }
+
+        return value;
+
     }
 
     @Override
