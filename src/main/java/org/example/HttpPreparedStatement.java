@@ -78,7 +78,12 @@ public class HttpPreparedStatement implements PreparedStatement {
             }
 
         }
-        query.append(parts[parameters.length]);
+
+        if(parts.length > parameters.length) {
+
+            query.append(parts[parameters.length]);
+
+        }
 
         queryIsReady = (parametersNumber == parameters.length);
 
