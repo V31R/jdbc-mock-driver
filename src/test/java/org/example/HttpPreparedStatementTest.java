@@ -120,6 +120,47 @@ public class HttpPreparedStatementTest {
 
     }
 
+    @Test
+    public void executeUpdateQuery_IfFalse_NotAllParameters() throws IOException, SQLException{
+
+        String sql = getSqlForUpdate();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+        preparedStatement.setInt(1, getParameterValue());
+
+        try {
+
+            preparedStatement.executeUpdate();
+
+        }catch(SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
+    @Test
+    public void executeUpdateQuery_IfFalse_HttpConnectionError() throws IOException, SQLException{
+
+        String sql = getSqlForUpdate();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+        preparedStatement.setInt(1,getParameterValue());
+        preparedStatement.setInt(2,getParameterValue());
+
+        try {
+
+            preparedStatement.executeUpdate();
+
+        }catch(SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
     private static String getSqlForUpdate(){
 
         return "update table set field = ? where field = ?2";
