@@ -26,7 +26,7 @@ public class HttpResultSetTest {
     }
 
     @Test
-    public void constructor_ifTrue(){
+    public void constructor_IfTrue(){
 
         assertNotNull(httpResultSet);
 

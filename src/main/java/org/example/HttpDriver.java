@@ -20,7 +20,9 @@ public class HttpDriver implements Driver {
 
         var connectionUrlMatcher = Pattern.compile("//.+").matcher(url);
 
-        if(driverUrlPattern.asPredicate().test(url) && connectionUrlMatcher.find()){
+        if(driverUrlPattern.asPredicate().test(url)){
+
+            connectionUrlMatcher.find();
 
             var urlToConnection = url.substring(connectionUrlMatcher.start(), connectionUrlMatcher.end());
 

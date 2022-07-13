@@ -192,4 +192,23 @@ public class HttpDriverTest {
     }
 
 
+    @Test
+    public void jdbcCompliant() throws SQLException{
+
+        var r = httpDriver.jdbcCompliant();
+
+        assertTrue(r);
+
+    }
+
+    @Test
+    public void getParentLogger() throws SQLException{
+
+        var r = httpDriver.getParentLogger();
+
+        assertNotNull(r);
+
+    }
+
+
 }
