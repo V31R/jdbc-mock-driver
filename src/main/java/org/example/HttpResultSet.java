@@ -36,6 +36,12 @@ public class HttpResultSet implements ResultSet {
 
     }
 
+    public int getSize(){
+
+        return data.size() - 1;
+
+    }
+
     @Override
     public boolean next() throws SQLException {
 

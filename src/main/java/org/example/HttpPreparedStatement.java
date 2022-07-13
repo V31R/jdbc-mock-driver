@@ -162,7 +162,11 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     @Override
     public int executeUpdate() throws SQLException {
-        return 0;
+
+        executeRequest(createQueryBeforeExecute());
+
+        return lastResult.getSize();
+
     }
 
     private void checkParameterIndexBounds(int parameterIndex) throws SQLException{
@@ -493,7 +497,11 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     @Override
     public int executeUpdate(String sql) throws SQLException {
-        return 0;
+
+        executeRequest(sql);
+
+        return lastResult.getSize();
+
     }
 
     @Override
@@ -571,7 +579,7 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     @Override
     public int getUpdateCount() throws SQLException {
-        return 0;
+        return lastResult.getSize();
     }
 
     @Override

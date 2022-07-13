@@ -50,8 +50,7 @@ public class HttpPreparedStatementTest {
     public void executePreparedQuery_IfTrue(WireMockRuntimeInfo wmRuntimeInfo) throws IOException, SQLException{
 
         wmRuntimeInfo.getWireMock().stubFor(post(WireMock.urlEqualTo(url))
-                .willReturn(okForContentType("text/plain","\"Timestamp\",\"Age\",\"Gender\" " +
-                        "\n 2014-08-27 11:29:31,37,\"Female\"")));
+                .willReturn(okForContentType("text/plain",getCsvData())));
 
         String sql = getSqlWithParameter();
 
@@ -103,6 +102,29 @@ public class HttpPreparedStatementTest {
 
     }
 
+    @Test
+    public void executeUpdateQuery_IfTrue(WireMockRuntimeInfo wmRuntimeInfo) throws IOException, SQLException{
+
+        wmRuntimeInfo.getWireMock().stubFor(post(WireMock.urlEqualTo(url))
+                .willReturn(okForContentType("text/plain",getCsvData())));
+
+        String sql = getSqlForUpdate();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+        preparedStatement.setInt(1,getParameterValue());
+        preparedStatement.setInt(2,getParameterValue());
+
+        var result = preparedStatement.executeUpdate();
+
+        assertEquals(1, result);
+
+    }
+
+    private static String getSqlForUpdate(){
+
+        return "update table set field = ? where field = ?2";
+
+    }
 
     private static String getSqlWithParameter(){
 
@@ -116,5 +138,13 @@ public class HttpPreparedStatementTest {
         return 2022;
 
     }
+
+    private static String getCsvData(){
+
+        return "\"Timestamp\",\"Age\",\"Gender\" " +
+                "\n 2014-08-27 11:29:31,37,\"Female\"";
+
+    }
+
 
 }
