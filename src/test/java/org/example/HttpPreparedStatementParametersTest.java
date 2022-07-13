@@ -27,6 +27,18 @@ public class HttpPreparedStatementParametersTest {
     }
 
     @Test
+    public void constructorSplitString_WithOneParameter() throws IOException{
+
+        String sql = "select * from table where id = ?1 order by name";
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        assertEquals("select * from table where id =  order by name",
+                preparedStatement.getQuery());
+
+    }
+
+    @Test
     public void constructorSplitString_WithParameters() throws IOException{
 
         String sql = "select * from table where id = ?1 and name =?32 order by name";
