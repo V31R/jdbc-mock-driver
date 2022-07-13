@@ -21,9 +21,8 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     private static final  org.slf4j.Logger logger = LoggerFactory.getLogger(HttpPreparedStatement.class);
 
-    private static final String parameterRegex = "[?]{1}\\d+";
-    private static final String parameterRegexWithoutNumber = "[?]{1}";
-
+    private static final String parameterRegex = "[?]{1}";
+    private static final String numberRegex = "^\\d+";
     private HttpURLConnection urlConnection;
 
     private String[] parts;
@@ -40,24 +39,25 @@ public class HttpPreparedStatement implements PreparedStatement {
         urlConnection.setConnectTimeout(HttpConnectionData.timeout);
         urlConnection.setRequestMethod(HttpConnectionData.requestMethod);
 
-        Pattern parameterPattern = Pattern.compile(parameterRegexWithoutNumber);
+        Pattern parameterPattern = Pattern.compile(parameterRegex);
 
         Matcher matcher = parameterPattern.matcher(sql);
         int parametersCount = 0;
         while(matcher.find()){
             parametersCount++;
         }
-        parts = sql.split(parameterRegexWithoutNumber);
-        Pattern numberPattern = Pattern.compile("^\\d+");
+        parts = sql.split(parameterRegex);
+        var numberPredicate = Pattern.compile(numberRegex).asPredicate();
 
         for(int i =0;i < parts.length;i++){
 
-            while(numberPattern.asPredicate().test(parts[i])) {
+            while(numberPredicate.test(parts[i])) {
 
                 parts[i] = parts[i].substring(1);
 
             }
         }
+
         parameters = new String[parametersCount];
 
     }
