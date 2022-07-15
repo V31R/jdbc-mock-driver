@@ -97,6 +97,15 @@ public class HttpResultSetTest {
     }
 
     @Test
+    public void findColumn_IfTrue() throws SQLException{
+
+        int index = httpResultSet.findColumn(String.class.getName());
+
+        assertEquals(typeIndexes.get(String.class), index);
+
+    }
+
+    @Test
     public void getXXXByIndex_IfFalse_IndexOutOfRange_LessZero() throws SQLException{
 
         httpResultSet.next();
