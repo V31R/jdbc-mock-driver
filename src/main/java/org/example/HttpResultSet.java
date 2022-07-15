@@ -249,21 +249,45 @@ public class HttpResultSet implements ResultSet {
 
     @Override
     public byte[] getBytes(int columnIndex) throws SQLException {
+
+        checkBounds(columnIndex);
+
         return new byte[0];
     }
 
     @Override
     public Date getDate(int columnIndex) throws SQLException {
-        return null;
+
+        checkBounds(columnIndex);
+        Date value;
+
+        try {
+
+            value = Date.valueOf(data.get(cursorPos)[columnIndex]);
+
+        }catch (IllegalArgumentException illegalArgumentException){
+
+            throw new SQLException("Wrong data format should be yyyy-[m]m-[d]d");
+
+        }
+
+        return value;
+
     }
 
     @Override
     public Time getTime(int columnIndex) throws SQLException {
+
+        checkBounds(columnIndex);
+
         return null;
     }
 
     @Override
     public Timestamp getTimestamp(int columnIndex) throws SQLException {
+
+        checkBounds(columnIndex);
+
         return null;
     }
 
@@ -352,7 +376,9 @@ public class HttpResultSet implements ResultSet {
 
     @Override
     public Date getDate(String columnLabel) throws SQLException {
-        return null;
+
+        return getDate(getIndexByLabel(columnLabel));
+        
     }
 
     @Override
