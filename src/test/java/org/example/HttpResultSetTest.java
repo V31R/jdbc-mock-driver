@@ -8,7 +8,6 @@ import org.junit.platform.suite.api.Suite;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.channels.FileLock;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +43,6 @@ public class HttpResultSetTest {
         (new Util<BigDecimal>()).putValue(new BigDecimal("1.5"));
         (new Util<String>()).putValue("TEST");
         (new Util<Date>()).putValue(Date.valueOf("2022-06-20"));
-
 
         //name row
         StringBuilder csv = new StringBuilder("\"bool\"");
@@ -406,6 +404,36 @@ public class HttpResultSetTest {
 
     }
 
+    @Test
+    public void getDateByIndex_IfTrue() throws SQLException{
+
+        int index = typeIndexes.get(Date.class);
+
+        httpResultSet.next();
+
+        Date value = httpResultSet.getDate(index);
+
+        assertEquals(dataForCsv.get(--index).value,value);
+
+    }
+
+    @Test
+    public void getDateByIndex_IfFalse_WrongFormat() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getDate(8);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
 
     @Test
     public void getStringByColumnLabel_IfTrue() throws SQLException{
@@ -654,6 +682,7 @@ public class HttpResultSetTest {
         }
 
     }
+
     @Test
     public void getBigDecimalByColumnLabel_IfTrue() throws SQLException{
 
@@ -685,33 +714,43 @@ public class HttpResultSetTest {
 
     }
 
+    @Test
+    public void getDateByColumnLabel_IfTrue() throws SQLException{
+
+        Class clazz = Date.class;
+
+        httpResultSet.next();
+
+        Date value = httpResultSet.getDate(clazz.getName());
+
+        assertEquals(dataForCsv.get(typeIndexes.get(clazz) - 1).value,value);
+
+    }
+
+    @Test
+    public void getDateByColumnLabel_IfFalse_WrongLabel() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getDate(abracadabra);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
+
 
 
     static String getCsvData(){
 
         return csvData;
-
-        /*return  "\"" + getBooleanName()+ "\""
-                + "," + "\"" + getByteName() + "\""
-                + "," + "\"" + getShortName() + "\""
-                + "," + "\"" + getIntName() + "\""
-                + "," + "\"" + getLongName() + "\""
-                + "," + "\"" + getFloatName() + "\""
-                + "," + "\"" + getDoubleName() + "\""
-                + "," + "\"" + getBigDecimalName() + "\""
-                + "," + "\"" + getStringName() + "\""
-
-                + "\n 1," + getByte()
-                + "," + getShort()
-                + "," + getInt()
-                + "," + getLong()
-                + "," + getFloat()
-                + "," + getDouble()
-                + "," + getBigDecimal()
-                + "," + getString()
-
-                + "\n 0, 0, 0, 0, 0, 0.05, 9.75, 9.75, \"test\"";*/
-
 
     }
 
@@ -725,6 +764,7 @@ public class HttpResultSetTest {
             this.name = value.getClass().getName();
             this.value = value;
         }
+
     }
 
     static class Util<T>{
@@ -743,7 +783,6 @@ public class HttpResultSetTest {
             typeIndexes.put(clazz, index++);
 
         }
-
 
     }
 
