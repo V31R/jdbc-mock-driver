@@ -20,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HttpResultSetTest {
 
     private static final String abracadabra = "abracadabra";
-
+    private static final String truePostfix = "_true";
+    private static final String falsePostfix = "_false";
     private static HttpResultSet httpResultSet;
 
     private static List<TypeAndValue> dataForCsv;
@@ -34,6 +35,8 @@ public class HttpResultSetTest {
         dataForCsv = new ArrayList<>();
         typeIndexes = new HashMap<>();
 
+        (new Util<String>()).putValue("0");
+        (new Util<String>()).putValue("1");
         (new Util<Byte>()).putValue((byte)255);
         (new Util<Short>()).putValue((short)101);
         (new Util<Integer>()).putValue(2022);
@@ -44,28 +47,38 @@ public class HttpResultSetTest {
         (new Util<String>()).putValue("TEST");
         (new Util<Date>()).putValue(Date.valueOf("2022-06-20"));
 
-        //name row
-        StringBuilder csv = new StringBuilder("\"bool\"");
-        for (var typeData: dataForCsv) {
+        //rename 0 and 1 to boolean
+        dataForCsv.get(0).name = Boolean.class.getName() + falsePostfix;
+        dataForCsv.get(1).name = Boolean.class.getName() + truePostfix;
 
-            csv.append(", \"").append(typeData.name).append('"');
+        //make row with names
+        StringBuilder csv = new StringBuilder();
+        for (int i =0; i < dataForCsv.size();i++) {
 
-        }
-        //first row
-        csv.append("\n 1");
-        for (var typeData: dataForCsv) {
+            csv.append('"').append(dataForCsv.get(i).name).append('"');
+            if(i < dataForCsv.size() - 1){
 
-            csv.append(',').append(typeData.value);
+                csv.append(",");
 
-        }
-
-        //second row
-        csv.append("\n 0");
-        for (var typeData: dataForCsv) {
-
-            csv.append(',').append(typeData.value);
+            }
 
         }
+
+        //make 2 rows
+        for(int j =0; j < 2;j++) {
+            csv.append("\n");
+            for (int i = 0; i < dataForCsv.size(); i++) {
+
+                csv.append('"').append(dataForCsv.get(i).value).append('"');
+                if (i < dataForCsv.size() - 1) {
+
+                    csv.append(",");
+
+                }
+
+            }
+        }
+
 
         csvData = csv.toString();
 
@@ -75,7 +88,7 @@ public class HttpResultSetTest {
     @BeforeEach
     public void setHttpResultSet() throws CsvException, IOException {
 
-        httpResultSet = new HttpResultSet(getCsvData());
+        httpResultSet = new HttpResultSet(csvData);
 
     }
 
@@ -102,6 +115,22 @@ public class HttpResultSetTest {
         int index = httpResultSet.findColumn(String.class.getName());
 
         assertEquals(typeIndexes.get(String.class), index);
+
+    }
+
+    @Test
+    public void findColumn_IfFalse_WrongColumn(){
+
+        try {
+
+            httpResultSet.findColumn(abracadabra);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
 
     }
 
@@ -150,27 +179,15 @@ public class HttpResultSetTest {
 
         String value = httpResultSet.getString(index);
 
-        assertEquals(dataForCsv.get(--index).value,value);
+        assertEquals(dataForCsv.get(index).value,value);
 
 
     }
 
-
-    @Test
-    public void getBooleanByIndex_IfTrue_TrueValue() throws SQLException{
-
-        httpResultSet.next();
-
-        boolean value = httpResultSet.getBoolean(0);
-
-        assertTrue(value);
-
-    }
 
     @Test
     public void getBooleanByIndex_IfTrue_FalseValue() throws SQLException{
 
-        httpResultSet.next();
         httpResultSet.next();
 
         boolean value = httpResultSet.getBoolean(0);
@@ -178,6 +195,18 @@ public class HttpResultSetTest {
        assertFalse(value);
 
     }
+
+    @Test
+    public void getBooleanByIndex_IfTrue_TrueValue() throws SQLException{
+
+        httpResultSet.next();
+
+        boolean value = httpResultSet.getBoolean(1);
+
+        assertTrue(value);
+
+    }
+
 
     @Test
     public void getBooleanByIndex_IfFalse_WrongFormat() throws SQLException{
@@ -207,7 +236,7 @@ public class HttpResultSetTest {
 
         byte value = httpResultSet.getByte(index);
 
-        assertEquals(dataForCsv.get(--index).value,value);
+        assertEquals(dataForCsv.get(index).value,value);
 
     }
 
@@ -238,7 +267,7 @@ public class HttpResultSetTest {
 
         short value = httpResultSet.getShort(index);
 
-        assertEquals(dataForCsv.get(--index).value,value);
+        assertEquals(dataForCsv.get(index).value,value);
 
     }
 
@@ -269,7 +298,7 @@ public class HttpResultSetTest {
 
         int value = httpResultSet.getInt(index);
 
-        assertEquals(dataForCsv.get(--index).value,value);
+        assertEquals(dataForCsv.get(index).value,value);
 
     }
 
@@ -300,7 +329,7 @@ public class HttpResultSetTest {
 
         long value = httpResultSet.getLong(index);
 
-        assertEquals(dataForCsv.get(--index).value,value);
+        assertEquals(dataForCsv.get(index).value,value);
 
     }
 
@@ -330,7 +359,7 @@ public class HttpResultSetTest {
 
         float value = httpResultSet.getFloat(index);
 
-        assertEquals(dataForCsv.get(--index).value,value);
+        assertEquals(dataForCsv.get(index).value,value);
 
     }
 
@@ -361,7 +390,7 @@ public class HttpResultSetTest {
 
         double value = httpResultSet.getDouble(index);
 
-        assertEquals(dataForCsv.get(--index).value,value);
+        assertEquals(dataForCsv.get(index).value,value);
 
     }
 
@@ -391,7 +420,7 @@ public class HttpResultSetTest {
 
         BigDecimal value = httpResultSet.getBigDecimal(index);
 
-        assertEquals(dataForCsv.get(--index).value,value);
+        assertEquals(dataForCsv.get(index).value,value);
 
     }
 
@@ -422,7 +451,7 @@ public class HttpResultSetTest {
 
         Date value = httpResultSet.getDate(index);
 
-        assertEquals(dataForCsv.get(--index).value,value);
+        assertEquals(dataForCsv.get(index).value,value);
 
     }
 
@@ -453,7 +482,7 @@ public class HttpResultSetTest {
 
         String value = httpResultSet.getString(clazz.getName());
 
-        assertEquals(dataForCsv.get(typeIndexes.get(clazz) - 1).value,value);
+        assertEquals(dataForCsv.get(typeIndexes.get(clazz)).value,value);
 
 
     }
@@ -482,7 +511,7 @@ public class HttpResultSetTest {
 
         httpResultSet.next();
 
-        boolean value = httpResultSet.getBoolean(getBooleanName());
+        boolean value = httpResultSet.getBoolean(Boolean.class.getName() + truePostfix);
 
         assertTrue(value);
 
@@ -516,7 +545,7 @@ public class HttpResultSetTest {
 
         byte value = httpResultSet.getByte(clazz.getName());
 
-        assertEquals(dataForCsv.get(typeIndexes.get(clazz) - 1).value,value);
+        assertEquals(dataForCsv.get(typeIndexes.get(clazz)).value,value);
 
     }
 
@@ -547,7 +576,7 @@ public class HttpResultSetTest {
 
         short value = httpResultSet.getShort(clazz.getName());
 
-        assertEquals(dataForCsv.get(typeIndexes.get(clazz) - 1).value,value);
+        assertEquals(dataForCsv.get(typeIndexes.get(clazz)).value,value);
 
     }
 
@@ -578,7 +607,7 @@ public class HttpResultSetTest {
 
         int value = httpResultSet.getInt(clazz.getName());
 
-        assertEquals(dataForCsv.get(typeIndexes.get(clazz) - 1).value,value);
+        assertEquals(dataForCsv.get(typeIndexes.get(clazz)).value,value);
 
     }
 
@@ -609,7 +638,7 @@ public class HttpResultSetTest {
 
         long value = httpResultSet.getLong(clazz.getName());
 
-        assertEquals(dataForCsv.get(typeIndexes.get(clazz) - 1).value,value);
+        assertEquals(dataForCsv.get(typeIndexes.get(clazz)).value,value);
 
     }
 
@@ -639,7 +668,7 @@ public class HttpResultSetTest {
 
         float value = httpResultSet.getFloat(clazz.getName());
 
-        assertEquals(dataForCsv.get(typeIndexes.get(clazz) - 1).value,value);;
+        assertEquals(dataForCsv.get(typeIndexes.get(clazz)).value,value);;
 
     }
 
@@ -670,7 +699,7 @@ public class HttpResultSetTest {
 
         double value = httpResultSet.getDouble(clazz.getName());
 
-        assertEquals(dataForCsv.get(typeIndexes.get(clazz) - 1).value,value);
+        assertEquals(dataForCsv.get(typeIndexes.get(clazz)).value,value);
 
     }
 
@@ -701,7 +730,7 @@ public class HttpResultSetTest {
 
         BigDecimal value = httpResultSet.getBigDecimal(clazz.getName());
 
-        assertEquals(dataForCsv.get(typeIndexes.get(clazz) - 1).value,value);
+        assertEquals(dataForCsv.get(typeIndexes.get(clazz)).value,value);
 
     }
 
@@ -732,7 +761,7 @@ public class HttpResultSetTest {
 
         Date value = httpResultSet.getDate(clazz.getName());
 
-        assertEquals(dataForCsv.get(typeIndexes.get(clazz) - 1).value,value);
+        assertEquals(dataForCsv.get(typeIndexes.get(clazz)).value,value);
 
     }
 
@@ -753,16 +782,6 @@ public class HttpResultSetTest {
         }
 
     }
-
-
-
-
-    static String getCsvData(){
-
-        return csvData;
-
-    }
-
 
     static class TypeAndValue<T>{
 
@@ -786,21 +805,12 @@ public class HttpResultSetTest {
 
         }
 
-        static int index = 1;
+        static int index = 0;
         static void putTypeIndex(Class clazz){
 
             typeIndexes.put(clazz, index++);
 
         }
-
-    }
-
-
-
-    static String getBooleanName(){
-
-        return "bool";
-
     }
 
 
