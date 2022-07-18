@@ -46,6 +46,7 @@ public class HttpResultSetTest {
         (new Util<BigDecimal>()).putValue(new BigDecimal("1.5"));
         (new Util<String>()).putValue("TEST");
         (new Util<Date>()).putValue(Date.valueOf("2022-06-20"));
+        (new Util<Time>()).putValue(Time.valueOf("00:05:55"));
 
         //rename 0 and 1 to boolean
         dataForCsv.get(0).name = Boolean.class.getName() + falsePostfix;
@@ -474,6 +475,37 @@ public class HttpResultSetTest {
     }
 
     @Test
+    public void getTimeByIndex_IfTrue() throws SQLException{
+
+        int index = typeIndexes.get(Time.class);
+
+        httpResultSet.next();
+
+        Time value = httpResultSet.getTime(index);
+
+        assertEquals(dataForCsv.get(index).value,value);
+
+    }
+
+    @Test
+    public void getTimeByIndex_IfFalse_WrongFormat() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getTime(8);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
+    @Test
     public void getStringByColumnLabel_IfTrue() throws SQLException{
 
         Class clazz = String.class;
@@ -773,6 +805,37 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getDate(abracadabra);
+
+        }
+        catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
+    @Test
+    public void getTimeByColumnLabel_IfTrue() throws SQLException{
+
+        Class clazz = Time.class;
+
+        httpResultSet.next();
+
+        Time value = httpResultSet.getTime(clazz.getName());
+
+        assertEquals(dataForCsv.get(typeIndexes.get(clazz)).value,value);
+
+    }
+
+    @Test
+    public void getTimeByColumnLabel_IfFalse_WrongLabel() throws SQLException{
+
+        httpResultSet.next();
+
+        try {
+
+            httpResultSet.getTime(abracadabra);
 
         }
         catch (SQLException sqlException){

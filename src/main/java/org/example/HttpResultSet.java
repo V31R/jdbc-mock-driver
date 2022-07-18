@@ -267,7 +267,7 @@ public class HttpResultSet implements ResultSet {
 
         }catch (IllegalArgumentException illegalArgumentException){
 
-            throw new SQLException("Wrong data format should be yyyy-[m]m-[d]d");
+            throw new SQLException("Wrong data format should, be yyyy-[m]m-[d]d");
 
         }
 
@@ -280,7 +280,16 @@ public class HttpResultSet implements ResultSet {
 
         checkBounds(columnIndex);
 
-        return null;
+        try {
+
+            return Time.valueOf(data.get(cursorPos)[columnIndex]);
+
+        }catch (IllegalArgumentException illegalArgumentException){
+
+            throw new SQLException("Wrong time format, should be hh:mm:ss");
+
+        }
+
     }
 
     @Override
@@ -383,7 +392,9 @@ public class HttpResultSet implements ResultSet {
 
     @Override
     public Time getTime(String columnLabel) throws SQLException {
-        return null;
+
+        return getTime(getIndexByLabel(columnLabel));
+
     }
 
     @Override
