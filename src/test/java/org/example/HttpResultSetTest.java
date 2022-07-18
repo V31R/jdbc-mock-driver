@@ -125,6 +125,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.findColumn(abracadabra);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -143,6 +144,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getBoolean(-1);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -161,6 +163,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getBoolean(Integer.MAX_VALUE);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -217,7 +220,8 @@ public class HttpResultSetTest {
 
         try {
 
-            httpResultSet.getBoolean(1);
+            httpResultSet.getBoolean(8);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -249,6 +253,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getByte(8);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -280,6 +285,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getShort(8);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -311,13 +317,14 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getInt(8);
+            fail();
 
         }
         catch (SQLException sqlException){
 
             assertNotNull(sqlException);
 
-        }
+        };
 
     }
 
@@ -342,6 +349,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getLong(8);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -371,7 +379,8 @@ public class HttpResultSetTest {
 
         try {
 
-            httpResultSet.getFloat(8);
+            httpResultSet.getFloat(9);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -402,7 +411,8 @@ public class HttpResultSetTest {
 
         try {
 
-            httpResultSet.getDouble(8);
+            httpResultSet.getDouble(9);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -432,7 +442,8 @@ public class HttpResultSetTest {
 
         try {
 
-            httpResultSet.getBigDecimal(8);
+            httpResultSet.getBigDecimal(9);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -440,6 +451,7 @@ public class HttpResultSetTest {
             assertNotNull(sqlException);
 
         }
+
 
     }
 
@@ -464,6 +476,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getDate(8);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -495,6 +508,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getTime(8);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -527,6 +541,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getString(abracadabra);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -534,6 +549,7 @@ public class HttpResultSetTest {
             assertNotNull(sqlException);
 
         }
+
 
     }
 
@@ -558,6 +574,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getBoolean(abracadabra);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -589,6 +606,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getByte(abracadabra);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -620,6 +638,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getShort(abracadabra);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -651,6 +670,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getInt(abracadabra);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -682,6 +702,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getLong(abracadabra);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -712,6 +733,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getFloat(abracadabra);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -743,6 +765,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getDouble(abracadabra);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -774,6 +797,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getBigDecimal(abracadabra);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -805,6 +829,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getDate(abracadabra);
+            fail();
 
         }
         catch (SQLException sqlException){
@@ -836,6 +861,7 @@ public class HttpResultSetTest {
         try {
 
             httpResultSet.getTime(abracadabra);
+            fail();
 
         }
         catch (SQLException sqlException){
