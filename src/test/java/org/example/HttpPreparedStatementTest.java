@@ -73,6 +73,7 @@ public class HttpPreparedStatementTest {
         try {
 
             preparedStatement.execute();
+            fail();
 
         }catch(SQLException sqlException){
 
@@ -93,6 +94,7 @@ public class HttpPreparedStatementTest {
         try {
 
             preparedStatement.execute();
+            fail();
 
         }catch(SQLException sqlException){
 
@@ -131,6 +133,7 @@ public class HttpPreparedStatementTest {
         try {
 
             preparedStatement.executeUpdate();
+            fail();
 
         }catch(SQLException sqlException){
 
@@ -152,6 +155,7 @@ public class HttpPreparedStatementTest {
         try {
 
             preparedStatement.executeUpdate();
+            fail();
 
         }catch(SQLException sqlException){
 

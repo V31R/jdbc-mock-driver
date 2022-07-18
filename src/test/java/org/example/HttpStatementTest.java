@@ -72,6 +72,7 @@ public class HttpStatementTest {
         try {
 
             var result = testStatement.executeQuery("select * from table;");
+            fail();
 
         }catch (SQLException sqlException){
 
@@ -79,9 +80,7 @@ public class HttpStatementTest {
 
         }
 
-
     }
-
 
 }
 

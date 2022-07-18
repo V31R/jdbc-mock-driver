@@ -120,6 +120,7 @@ public class HttpPreparedStatementParametersTest {
         try {
 
             preparedStatement.setBoolean(0, true);
+            fail();
 
         }catch (SQLException exception){
 
@@ -139,6 +140,7 @@ public class HttpPreparedStatementParametersTest {
         try {
 
             preparedStatement.setBoolean(1, true);
+            fail();
 
         }catch (SQLException exception){
 
@@ -174,6 +176,7 @@ public class HttpPreparedStatementParametersTest {
         try {
 
             preparedStatement.setByte(0, value);
+            fail();
 
         }catch (SQLException exception){
 
@@ -210,6 +213,7 @@ public class HttpPreparedStatementParametersTest {
         try {
 
             preparedStatement.setShort(0, value);
+            fail();
 
         }catch (SQLException exception){
 
@@ -245,6 +249,7 @@ public class HttpPreparedStatementParametersTest {
         try {
 
             preparedStatement.setInt(0, value);
+            fail();
 
         }catch (SQLException exception){
 
@@ -280,6 +285,7 @@ public class HttpPreparedStatementParametersTest {
         try {
 
             preparedStatement.setLong(0, value);
+            fail();
 
         }catch (SQLException exception){
 
@@ -315,6 +321,7 @@ public class HttpPreparedStatementParametersTest {
         try {
 
             preparedStatement.setFloat(0, value);
+            fail();
 
         }catch (SQLException exception){
 
@@ -350,6 +357,7 @@ public class HttpPreparedStatementParametersTest {
         try {
 
             preparedStatement.setDouble(0, value);
+            fail();
 
         }catch (SQLException exception){
 
@@ -385,6 +393,7 @@ public class HttpPreparedStatementParametersTest {
         try {
 
             preparedStatement.setBigDecimal(0, value);
+            fail();
 
         }catch (SQLException exception){
 
@@ -418,6 +427,7 @@ public class HttpPreparedStatementParametersTest {
         try {
 
             preparedStatement.setString(0, "");
+            fail();
 
         }catch (SQLException exception){
 
