@@ -124,11 +124,9 @@ public class HttpResultSet implements ResultSet {
     public byte getByte(int columnIndex) throws SQLException {
 
         checkBounds(columnIndex);
-
-        byte value = 0;
         try {
 
-            value = Byte.parseByte(data.get(cursorPos)[columnIndex].trim());
+            return Byte.parseByte(data.get(cursorPos)[columnIndex].trim());
 
         }catch (NumberFormatException numberFormatException){
 
@@ -136,19 +134,15 @@ public class HttpResultSet implements ResultSet {
 
         }
 
-        return value;
-
     }
 
     @Override
     public short getShort(int columnIndex) throws SQLException {
 
         checkBounds(columnIndex);
-
-        short value = 0;
         try {
 
-            value = Short.parseShort(data.get(cursorPos)[columnIndex].trim());
+            return Short.parseShort(data.get(cursorPos)[columnIndex].trim());
 
         }catch (NumberFormatException numberFormatException){
 
@@ -156,19 +150,15 @@ public class HttpResultSet implements ResultSet {
 
         }
 
-        return value;
-
     }
 
     @Override
     public int getInt(int columnIndex) throws SQLException {
 
         checkBounds(columnIndex);
-
-        int value = 0;
         try {
 
-            value = Integer.parseInt(data.get(cursorPos)[columnIndex].trim());
+            return Integer.parseInt(data.get(cursorPos)[columnIndex].trim());
 
         }catch (NumberFormatException numberFormatException){
 
@@ -176,19 +166,15 @@ public class HttpResultSet implements ResultSet {
 
         }
 
-        return value;
-
     }
 
     @Override
     public long getLong(int columnIndex) throws SQLException {
 
         checkBounds(columnIndex);
-
-        long value = 0;
         try {
 
-            value = Long.parseLong(data.get(cursorPos)[columnIndex].trim());
+            return Long.parseLong(data.get(cursorPos)[columnIndex].trim());
 
         }catch (NumberFormatException numberFormatException){
 
@@ -196,19 +182,15 @@ public class HttpResultSet implements ResultSet {
 
         }
 
-        return value;
-
     }
 
     @Override
     public float getFloat(int columnIndex) throws SQLException {
 
         checkBounds(columnIndex);
-
-        float value = 0;
         try {
 
-            value = Float.parseFloat(data.get(cursorPos)[columnIndex].trim());
+            return Float.parseFloat(data.get(cursorPos)[columnIndex].trim());
 
         }catch (NumberFormatException numberFormatException){
 
@@ -216,27 +198,21 @@ public class HttpResultSet implements ResultSet {
 
         }
 
-        return value;
-
     }
 
     @Override
     public double getDouble(int columnIndex) throws SQLException {
 
         checkBounds(columnIndex);
-
-        double value = 0;
         try {
 
-            value = Double.parseDouble(data.get(cursorPos)[columnIndex].trim());
+            return Double.parseDouble(data.get(cursorPos)[columnIndex].trim());
 
         }catch (NumberFormatException numberFormatException){
 
             throw new SQLException("This isn't double value");
 
         }
-
-        return value;
 
     }
 
@@ -259,19 +235,15 @@ public class HttpResultSet implements ResultSet {
     public Date getDate(int columnIndex) throws SQLException {
 
         checkBounds(columnIndex);
-        Date value;
-
         try {
 
-            value = Date.valueOf(data.get(cursorPos)[columnIndex]);
+            return Date.valueOf(data.get(cursorPos)[columnIndex]);
 
         }catch (IllegalArgumentException illegalArgumentException){
 
             throw new SQLException("Wrong data format should, be yyyy-[m]m-[d]d");
 
         }
-
-        return value;
 
     }
 
@@ -468,19 +440,15 @@ public class HttpResultSet implements ResultSet {
     public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
 
         checkBounds(columnIndex);
-
-        BigDecimal value =  new BigDecimal(0);
         try {
 
-            value = BigDecimal.valueOf(Double.parseDouble(data.get(cursorPos)[columnIndex]));
+            return BigDecimal.valueOf(Double.parseDouble(data.get(cursorPos)[columnIndex]));
 
         }catch (NumberFormatException numberFormatException){
 
             throw new SQLException("This isn't big decimal value");
 
         }
-
-        return value;
 
     }
 
