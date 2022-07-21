@@ -104,6 +104,45 @@ public class HttpPreparedStatementTest {
 
     }
 
+
+    @Test
+    public void executeSelectQuery_IfTrue_WithNames(WireMockRuntimeInfo wmRuntimeInfo) throws IOException, SQLException{
+
+        wmRuntimeInfo.getWireMock().stubFor(post(WireMock.urlEqualTo(url))
+                .willReturn(okForContentType("text/plain",getCsvData())));
+
+        String sql = getSqlWithAlias();
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+
+        var result = preparedStatement.execute();
+
+        assertTrue(result);
+
+    }
+
+    @Test
+    public void executeSelectQuery_IfFalse_WrongNamesNumber(WireMockRuntimeInfo wmRuntimeInfo) throws IOException{
+
+        wmRuntimeInfo.getWireMock().stubFor(post(WireMock.urlEqualTo(url))
+                .willReturn(okForContentType("text/plain",getCsvData())));
+
+        String sql = "select timestamp as t, age as a from table";
+
+        HttpPreparedStatement preparedStatement = new HttpPreparedStatement(uri,sql);
+        try {
+
+           preparedStatement.execute();
+            fail();
+
+        }catch (SQLException sqlException){
+
+            assertNotNull(sqlException);
+
+        }
+
+    }
+
     @Test
     public void executeUpdateQuery_IfTrue(WireMockRuntimeInfo wmRuntimeInfo) throws IOException, SQLException{
 
@@ -174,6 +213,12 @@ public class HttpPreparedStatementTest {
     private static String getSqlWithParameter(){
 
         return "select * from table where field = ?1";
+
+    }
+
+    private static String getSqlWithAlias(){
+
+        return "select timestamp as t, age as a, gender as g from table";
 
     }
 
