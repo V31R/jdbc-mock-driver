@@ -134,7 +134,7 @@ public class HttpPreparedStatement implements PreparedStatement {
 
                 List<String> queryFieldNames = QueryAnalyzer.getFieldNames(sql);
                 if(queryFieldNames != null && queryFieldNames.size() > 0){
-
+                    lastResult = new HttpResultSet(responseBody, queryFieldNames);
                 }else {
                     lastResult = new HttpResultSet(responseBody);
                 }
