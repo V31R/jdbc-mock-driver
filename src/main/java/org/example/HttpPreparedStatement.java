@@ -24,10 +24,10 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     private static final String parameterRegex = "[?]{1}";
     private static final String numberRegex = "^\\d+";
-    private HttpURLConnection urlConnection;
+    private final HttpURLConnection urlConnection;
 
-    private String[] parts;
-    private String[] parameters;
+    private final String[] parts;
+    private final String[] parameters;
     private boolean queryIsReady = false;
     private HttpResultSet lastResult;
 
@@ -116,6 +116,22 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     }
 
+    private void createResultSetRequest(String sql, String responseBody) throws CsvException, IOException{
+
+        List<String> queryFieldNames = QueryAnalyzer.getFieldNames(sql);
+
+        if(queryFieldNames != null && queryFieldNames.size() > 0){
+
+            lastResult = new HttpResultSet(responseBody, queryFieldNames);
+
+        }else {
+
+            lastResult = new HttpResultSet(responseBody);
+
+        }
+
+    }
+
     private void executeRequest(String sql) throws SQLException{
 
         logger.info(this + " Execute query `" + sql + "'");
@@ -132,12 +148,7 @@ public class HttpPreparedStatement implements PreparedStatement {
                 Scanner scanner = new Scanner(response);
                 String responseBody = scanner.useDelimiter("\\A").next();
 
-                List<String> queryFieldNames = QueryAnalyzer.getFieldNames(sql);
-                if(queryFieldNames != null && queryFieldNames.size() > 0){
-                    lastResult = new HttpResultSet(responseBody, queryFieldNames);
-                }else {
-                    lastResult = new HttpResultSet(responseBody);
-                }
+                createResultSetRequest(sql, responseBody);
 
             }else{
 

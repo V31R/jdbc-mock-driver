@@ -26,7 +26,7 @@ public class QueryAnalyzer {
         Matcher selectMatcher = selectPattern.matcher(sql);
 
 
-        if(selectMatcher.find()){
+        if(selectMatcher.find() && fromPattern.asPredicate().test(sql)){
 
             var start = selectMatcher.end() + 1;
 
@@ -45,9 +45,9 @@ public class QueryAnalyzer {
 
             result = new ArrayList<>();
 
-            var splittedNames = changed.substring(0, end - 1).split(",");
+            var splittedNames = changed.substring(0, end).split(",");
 
-            if(splittedNames.length == 1 && splittedNames[0].equals("*")){
+            if(splittedNames.length == 1 && splittedNames[0].trim().equals("*")){
 
                 logger.info("Can not find names for select all in '{}'", sql);
 
