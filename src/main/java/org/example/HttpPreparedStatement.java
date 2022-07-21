@@ -116,7 +116,7 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     }
 
-    private void createResultSetRequest(String sql, String responseBody) throws CsvException, IOException{
+    private void createResultSetRequest(String sql, String responseBody) throws CsvException, IOException , SQLException{
 
         List<String> queryFieldNames = QueryAnalyzer.getFieldNames(sql);
 

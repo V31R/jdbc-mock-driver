@@ -3,6 +3,7 @@ package org.example;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -17,35 +18,23 @@ public class QueryAnalyzer {
     static Pattern fromPattern = Pattern.compile("from",Pattern.CASE_INSENSITIVE);
     static Pattern asPattern = Pattern.compile("as",Pattern.CASE_INSENSITIVE);
 
-    static List<String> getFieldNames(String sql){
+    static List<String> getFieldNames(String sql) throws SQLException {
 
         logger.info("Analyze query '{}' for field names", sql);
 
         List<String> result = null;
 
         Matcher selectMatcher = selectPattern.matcher(sql);
+        Matcher fromMatcher = fromPattern.matcher(sql);
 
-
-        if(selectMatcher.find() && fromPattern.asPredicate().test(sql)){
+        if(selectMatcher.find() && fromMatcher.find()){
 
             var start = selectMatcher.end() + 1;
-
-            String changed = sql.substring(start);
-
-            Matcher fromMatcher = fromPattern.matcher(changed);
-
-
-            var end = changed.length();
-
-            if(fromMatcher.find()){
-
-                end = fromMatcher.start();
-
-            }
+            var end = fromMatcher.start() - 1;
 
             result = new ArrayList<>();
 
-            var splittedNames = changed.substring(0, end).split(",");
+            var splittedNames = sql.substring(start, end).split(",");
 
             if(splittedNames.length == 1 && splittedNames[0].trim().equals("*")){
 
@@ -66,6 +55,10 @@ public class QueryAnalyzer {
                 }else if(asPattern.asPredicate().test(name[1]) && name.length == 3){
 
                     result.add(name[2]);
+
+                }else{
+
+                    throw new SQLException("Syntax error in '"+splittedNames[i]+"'");
 
                 }
 
