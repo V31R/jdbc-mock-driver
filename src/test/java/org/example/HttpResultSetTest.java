@@ -101,6 +101,34 @@ public class HttpResultSetTest {
     }
 
     @Test
+    public void constructorWithNames_IfTrue() throws CsvException, IOException{
+
+        List<String> names = new ArrayList<>();
+        names.add("field");
+        httpResultSet = new  HttpResultSet("\"name\"\n \"dev\"", names);
+
+        assertNotNull(httpResultSet);
+
+    }
+
+    @Test
+    public void constructorWithNames_IfFalse_WrongNamesSize() throws IOException{
+
+        List<String> names = new ArrayList<>();
+        try {
+
+            httpResultSet = new HttpResultSet("\"name\"\n \"dev\"", names);
+            fail();
+
+        }catch (CsvException csvException){
+
+            assertNotNull(csvException);
+
+        }
+
+    }
+
+    @Test
     public void testNext() throws SQLException{
 
         //csv data has only 2 rows

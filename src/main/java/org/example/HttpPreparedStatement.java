@@ -13,6 +13,7 @@ import java.net.URL;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -130,7 +131,13 @@ public class HttpPreparedStatement implements PreparedStatement {
                 InputStream response = urlConnection.getInputStream();
                 Scanner scanner = new Scanner(response);
                 String responseBody = scanner.useDelimiter("\\A").next();
-                lastResult = new HttpResultSet(responseBody);
+
+                List<String> queryFieldNames = QueryAnalyzer.getFieldNames(sql);
+                if(queryFieldNames != null && queryFieldNames.size() > 0){
+
+                }else {
+                    lastResult = new HttpResultSet(responseBody);
+                }
 
             }else{
 

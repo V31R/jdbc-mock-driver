@@ -36,6 +36,28 @@ public class HttpResultSet implements ResultSet {
 
     }
 
+    HttpResultSet(String csvString, List<String> names) throws IOException, CsvException {
+
+        CSVReader csvReader = new CSVReader(new StringReader(csvString));
+        data = csvReader.readAll();
+        labels = new HashMap<>();
+        cursorPos = 0;//0 is label's row
+
+        if(data.get(cursorPos).length != names.size()){
+
+            throw new CsvException("Highlighted names do not match the amount of data");
+
+        }
+
+
+        for(int i =0; i < names.size(); i++){
+
+            labels.put(names.get(i),i);
+
+        }
+
+    }
+
     public int getSize(){
 
         return data.size() - 1;
