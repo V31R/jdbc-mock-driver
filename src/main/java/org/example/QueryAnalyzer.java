@@ -1,5 +1,8 @@
 package org.example;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -7,11 +10,16 @@ import java.util.regex.Pattern;
 
 public class QueryAnalyzer {
 
+    private static final  org.slf4j.Logger logger = LoggerFactory.getLogger(QueryAnalyzer.class);
+
+
     static Pattern selectPattern = Pattern.compile("^select",Pattern.CASE_INSENSITIVE);
     static Pattern fromPattern = Pattern.compile("from",Pattern.CASE_INSENSITIVE);
     static Pattern asPattern = Pattern.compile("as",Pattern.CASE_INSENSITIVE);
 
     static List<String> getFieldNames(String sql){
+
+        logger.info("Analyze query '{}' for field names", sql);
 
         List<String> result = null;
 
@@ -41,6 +49,8 @@ public class QueryAnalyzer {
 
             if(splittedNames.length == 1 && splittedNames[0].equals("*")){
 
+                logger.info("Can not find names for select all in '{}'", sql);
+
                 return result;
 
             }
@@ -61,7 +71,16 @@ public class QueryAnalyzer {
 
             }
 
+            StringBuilder names = new StringBuilder();
+            for (int  i =0; i < result.size();i++) {
+
+                names.append("\n").append(i).append(" : ").append(result.get(i));
+
+            }
+            logger.info("Query '{}' has this names: {}", sql, names.toString());
+
         }
+
 
         return result;
 
