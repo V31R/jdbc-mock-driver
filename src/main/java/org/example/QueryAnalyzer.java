@@ -29,40 +29,7 @@ public class QueryAnalyzer {
 
         if(selectMatcher.find() && fromMatcher.find()){
 
-            var start = selectMatcher.end() + 1;
-            var end = fromMatcher.start() - 1;
-
-            result = new ArrayList<>();
-
-            var splittedNames = sql.substring(start, end).split(",");
-
-            if(splittedNames.length == 1 && splittedNames[0].trim().equals("*")){
-
-                logger.info("Can not find names for select all in '{}'", sql);
-
-                return result;
-
-            }
-
-            for(int i = 0;i<splittedNames.length;i++){
-
-                var name = splittedNames[i].trim().split(" ");
-
-                if(name.length == 1){
-
-                    result.add(name[0]);
-
-                }else if(asPattern.asPredicate().test(name[1]) && name.length == 3){
-
-                    result.add(name[2]);
-
-                }else{
-
-                    throw new SQLException("Syntax error in '"+splittedNames[i]+"'");
-
-                }
-
-            }
+            result = getNames(sql.substring(selectMatcher.end() + 1, fromMatcher.start() - 1));
 
             StringBuilder names = new StringBuilder();
             for (int  i =0; i < result.size();i++) {
@@ -74,6 +41,44 @@ public class QueryAnalyzer {
 
         }
 
+
+        return result;
+
+    }
+
+    private static List<String> getNames(String sql) throws SQLException{
+
+        List<String> result = new ArrayList<>();
+
+        var splittedNames = sql.split(",");
+
+        if(splittedNames.length == 1 && splittedNames[0].trim().equals("*")){
+
+            logger.info("Can not find names for select all in '{}'", sql);
+
+            return result;
+
+        }
+
+        for(int i = 0;i<splittedNames.length;i++){
+
+            var name = splittedNames[i].trim().split(" ");
+
+            if(name.length == 1){
+
+                result.add(name[0]);
+
+            }else if(asPattern.asPredicate().test(name[1]) && name.length == 3){
+
+                result.add(name[2]);
+
+            }else{
+
+                throw new SQLException("Syntax error in '" + splittedNames[i]+"'");
+
+            }
+
+        }
 
         return result;
 
