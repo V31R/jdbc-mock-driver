@@ -1,9 +1,10 @@
 [![Java CI with Maven](https://github.com/V31R/jdbc-mock-driver/actions/workflows/maven.yml/badge.svg)](https://github.com/V31R/jdbc-mock-driver/actions/workflows/maven.yml)
 [![codecov](https://codecov.io/gh/V31R/jdbc-mock-driver/branch/master/graph/badge.svg?token=7FSW8N93SZ)](https://codecov.io/gh/V31R/jdbc-mock-driver)
+***
 # JDBC mock driver
-
+***
 [Примеры работы с драйвером](https://github.com/V31R/jdbc-mock-example)
-
+***
 ## Использование драйвера
 
 ### Зависимости для проекта
@@ -18,7 +19,7 @@
 </dependency>
 ```
 Также для логирования драйвер использует `slf4j`, поэтому к проекту нужно подключить реализацию логгера.
-
+***
 ### URL для подключения к драйверу
 
 Для работы с драйвером при подключении нужно указать `url`:
@@ -31,6 +32,7 @@ jdbc:wm://localhost:8080/sql-mock
 ```
 Для корректной работы драйвера нужно наличие сервера(или подмены сервера, к примеру с помощью [WireMock](https://wiremock.org/)), 
 к которому можно будет делать `http` запросы и получать ответ в формате `csv`. 
+***
 ### Ответы на запросы
 
 Все ответы должны быть в формате `csv`, к примеру:
@@ -50,6 +52,7 @@ select data1, data2 as name1 from table
 Для драйвера важно только, чтобы в результате было такое же количество столбцов, сколько было в `select` запросе.
 
 **- Не работает с `select *` запросами, в их результатах нужно следить за именами столбцов.*
+***
 ### Использование вместе с Spring Boot
 
 Для работы с этим драйвером, как и с любым другим `jdbc` драйвером, 
@@ -76,7 +79,7 @@ spring.jpa.database-platform = org.hibernate.dialect.MySQL8Dialect
 ```
 spring.jpa.database-platform = org.hibernate.dialect.PostgreSQLDialect
 ```
-
+***
 ## Диаграмма покрытия кода:
 
 [![Диаграмма покрытия кода](https://codecov.io/gh/V31R/jdbc-mock-driver/branch/master/graphs/sunburst.svg?token=7FSW8N93SZ)](https://codecov.io/gh/V31R/jdbc-mock-driver)
