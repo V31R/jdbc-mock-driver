@@ -38,7 +38,7 @@ public class HttpConnection implements Connection {
     public Statement createStatement() throws SQLException {
         try {
 
-            var result = new HttpStatement(url);
+            var result = new HttpPreparedStatement(url, "");
             logger.debug("Created new statement");
             return result;
 
