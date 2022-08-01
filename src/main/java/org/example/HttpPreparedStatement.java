@@ -5,16 +5,19 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.http.HttpClient;
 import java.net.URL;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.*;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,21 +27,42 @@ public class HttpPreparedStatement implements PreparedStatement {
 
     private static final String parameterRegex = "[?]{1}";
     private static final String numberRegex = "^\\d+";
-    private final HttpURLConnection urlConnection;
+    private HttpClient httpClient;
+    private HttpRequest.Builder httpRequestBuilder;
 
-    private final String[] parts;
-    private final String[] parameters;
+    private String[] parts;
+    private String[] parameters;
     private boolean queryIsReady = false;
     private HttpResultSet lastResult;
 
     public HttpPreparedStatement(String uri, String sql) throws IOException {
 
-        urlConnection = (HttpURLConnection) new URL(uri).openConnection();
-        urlConnection.setDoOutput(true);
-        urlConnection.setRequestProperty(HttpConnectionData.CONTENT_TYPE, HttpConnectionData.contentType);
-        urlConnection.setRequestProperty(HttpConnectionData.ACCEPT, HttpConnectionData.accept);
-        urlConnection.setConnectTimeout(HttpConnectionData.timeout);
-        urlConnection.setRequestMethod(HttpConnectionData.requestMethod);
+        prepareHttpSettings(uri);
+
+        analyzeQueryForParameters(sql);
+
+    }
+
+    public HttpPreparedStatement(String uri) throws IOException {
+
+        prepareHttpSettings(uri);
+        parameters = new String[0];
+
+    }
+
+    private void prepareHttpSettings(String uri) throws IOException{
+
+        httpClient = HttpClient.newBuilder().build();
+
+        httpRequestBuilder = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .timeout(Duration.ofMillis(HttpConnectionData.timeout))
+                .header(HttpConnectionData.CONTENT_TYPE, HttpConnectionData.contentType)
+                .header(HttpConnectionData.ACCEPT, HttpConnectionData.accept);
+
+    }
+
+    private void analyzeQueryForParameters(String sql){
 
         Pattern parameterPattern = Pattern.compile(parameterRegex);
 
@@ -138,26 +162,24 @@ public class HttpPreparedStatement implements PreparedStatement {
 
         try {
 
-            OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
-            writer.write(sql);
-            writer.close();
+            HttpRequest request = httpRequestBuilder
+                    .POST(HttpRequest.BodyPublishers.ofString(sql))
+                    .build();
 
-            if(urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK){
+            HttpResponse<String>  response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-                InputStream response = urlConnection.getInputStream();
-                Scanner scanner = new Scanner(response);
-                String responseBody = scanner.useDelimiter("\\A").next();
+            if(response.statusCode() == HttpURLConnection.HTTP_OK){
 
-                createResultSetRequest(sql, responseBody);
+                createResultSetRequest(sql, response.body());
 
             }else{
 
-                throw new SQLException("Connection to " + urlConnection.getURL() + " failed. Code: " + urlConnection.getResponseCode());
+                throw new SQLException("Connection to " + request.uri() + " failed. Code: " + response.statusCode());
 
             }
 
         }
-        catch (IOException| CsvException exception){
+        catch (IOException| CsvException|InterruptedException exception){
 
             throw  new SQLException(exception.getMessage());
 
